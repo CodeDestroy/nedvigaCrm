@@ -3,3 +3,4 @@ venv/
 backups/
 logs/
 media/
+./.venv/
