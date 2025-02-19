@@ -1,5 +1,6 @@
 venv/
-.db.json
+./db.json
+db.json
 backups/
 logs/
 media/
