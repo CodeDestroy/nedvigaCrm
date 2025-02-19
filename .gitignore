@@ -2,3 +2,4 @@ venv/
 .db.json
 backups/
 logs/
+media/
