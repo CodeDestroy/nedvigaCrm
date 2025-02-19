@@ -1,0 +1,46 @@
+{% extends 'base_view.html' %}
+{% load tools %}
+{% block container %}
+<form class="card" method="post" action="#">{% csrf_token %}
+    <div class="card-body">
+        <h1>Дома в {{ complex.name }}</h1>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-vcenter table-bordered table-nowrap card-table">
+            <thead>
+            <tr>
+                <th class="w-1 text-center p-3">ID</th>
+                <th class="text-center">Название</th>
+                <th class="text-center">Этажи</th>
+                <th class="text-center">Кол-во квартир</th>
+                <th class="text-center">Комплекс</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for building in buildings %}
+            <tr>
+                <td class="text-center p-3">
+                    <a href="{% url 'main:building_detail' building_id=building.id %}">{{ building.id }}</a>
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'main:building_detail' building_id=building.id %}">{{ building.name }}</a>
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'main:building_detail' building_id=building.id %}">{{ building.total_floors }}</a>
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'main:building_detail' building_id=building.id %}">{{ building.total_apartments }}</a>
+                </td>
+                <td class="text-center">{{ building.complex.name }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">Нет доступных домов</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'base_pagination.html' %}
+</form>
+{% endblock %}

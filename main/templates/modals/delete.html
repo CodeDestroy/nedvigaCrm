@@ -1,0 +1,24 @@
+<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <form class="modal-content" method="post" action="{{ url }}">
+        {% csrf_token %}
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-danger"></div>
+        <div class="modal-body text-center py-4">
+            <i class="ti ti-alert-triangle icon mb-2 text-danger icon-lg"></i>
+            <h3>Вы уверены?</h3>
+            <div class="text-secondary">
+                {% if name %}<div class="modal-body">Вы действительно хотите удалить {{ name|safe }}?</div>
+                {% else %}<div class="modal-body">Вы действительно хотите удалить данную запись?</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100">
+                <div class="row">
+                    <div class="col"><button type="button" class="btn w-100" data-bs-dismiss="modal">Отмена</button></div>
+                    <div class="col"><button type="submit" class="btn btn-danger w-100" data-bs-dismiss="modal">Удалить</button></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

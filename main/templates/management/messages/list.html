@@ -1,0 +1,35 @@
+{% extends 'base_view.html' %}
+{% block container %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-vcenter table-bordered table-nowrap card-table">
+            <thead>
+            <tr class="fw-bolder">
+                <th class="w-1 text-center p-2">#</th>
+                <th class="text-center p-2">Текст</th>
+                <th class="text-center w-1 p-2">Дата создания</th>
+                <th class="text-center w-1 p-2">Дата обновления</th>
+                <th class="text-center w-1 p-2"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for msg in templates %}
+            <tr>
+                <td class="text-center p-2">{{ msg.pk }}</td>
+                <td class="text-center p-2">{{ msg.text|safe }}</td>
+                <td class="text-center w-1 p-2">{{ msg.created_at }}</td>
+                <td class="text-center w-1 p-2">{{ msg.updated_at }}</td>
+                <td class="text-center p-2">
+                    <div class="btn-group">
+                        <a href="{% url 'main:management-message-update' message_id=msg.pk %}" class="btn btn-warning btn-icon"><i class="ti ti-pencil icon"></i></a>
+                        <a href="{% url 'main:management-message-delete' message_id=msg.pk %}" class="btn btn-danger btn-icon"><i class="ti ti-trash icon"></i></a>
+                    </div>
+                </td>
+            </tr>{% empty %}<tr><td colspan="5" class="text-center p-2">Шаблонов сообщений нет</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'base_pagination.html' %}
+</div>
+{% endblock %}

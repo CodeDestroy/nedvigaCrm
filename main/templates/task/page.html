@@ -1,0 +1,63 @@
+{% extends 'base_view.html' %}
+{% block container %}
+{% if task.is_done %}
+<div class="row">
+    <div class="col">
+        <div class="alert alert-success" role="alert"><i class="ti ti-check"></i> Задача выполнена!</div>
+    </div>
+</div>
+{% endif %}
+<div class="row">
+    <div class="col-12 col-lg-6">
+        {% if task.lead %}
+            <div class="card mb-3">
+                <div class="card-header border-bottom-0">
+                    <div><div class="card-title">{{ task.lead }}</div><div class="card-subtitle">Контакт</div></div>
+                    <div class="card-actions"><a href="{{ task.lead.get_absolute_url }}" class="btn btn-primary">Посмотреть</a></div>
+                </div>
+            </div>
+        {% endif %}
+        {% if task.deal %}
+            <div class="card mb-3">
+                <div class="card-header border-bottom-0">
+                    <div><div class="card-title">{{ task.deal }}</div><div class="card-subtitle">Сделка</div></div>
+                    <div class="card-actions"><a href="{{ task.deal.get_absolute_url }}" class="btn btn-primary">Посмотреть</a></div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="card">
+            {% if task.priority > 1 %}
+            <div class="card-stamp"><div class="card-stamp-icon {{ task.get_badge_color }}"><i class="ti ti-bell"></i></div></div>
+            {% endif %}
+            <div class="card-body">
+                <h3 class="card-title">{{ task.name }}</h3>
+                {% if task.text %}<p class="text-muted">{{ task.text }}</p>{% endif %}
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    {% if task.date_notify %}<div class="col">Напоминание: {{ task.date_notify }}</div>{% endif %}
+                    {% if task.date_to %}<div class="col-auto">Срок: {{ task.date_to }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-dashboard me-2"></i> Активность</h3></div>
+            <ul class="list-group list-group-flush">
+                {% if not task.is_done %}
+                <li class="list-group-item">
+                    <form action="{% url 'main:comment-create' type='task' item_id=task.id %}" method="post">
+                        {% csrf_token %}
+                        {{ comment_form.as_div }}
+                        <button type="submit" class="btn btn-success">Отправить</button>
+                    </form>
+                </li>
+                {% endif %}
+                {% for action in task.comments %}{% include 'comment/card.html' with action=action %}
+                {% empty %}<li class="list-group-item">Активностей у задачи нет</li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

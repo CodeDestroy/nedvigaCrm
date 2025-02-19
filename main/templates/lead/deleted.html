@@ -1,0 +1,37 @@
+{% extends 'base_view.html' %}
+{% load static filters tools %}
+{% block container %}
+<ul class="nav nav-bordered mb-3">
+    <li class="nav-item"><a class="nav-link" href="{% url 'main:lead-list' %}">Активные</a></li>
+    <li class="nav-item"><a class="nav-link active" href="{% url 'main:lead-list-deleted' %}">Удаленные</a></li>
+</ul>
+{% lead_filter %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-vcenter table-bordered table-nowrap card-table">
+            <thead>
+            <tr>
+                <td class="w-1 text-center p-3">#</td>
+                <td class="text-center">ФИО</td>
+                <td class="text-center">Телефон</td>
+                <td class="text-center w-1">Дата добавления</td>
+                <td class="text-center w-1">Дата последнего обновления</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for lead in leads %}
+            <tr>
+                <td class="text-center p-3">{{ lead.pk }}</td>
+                <td class="text-center">{{ lead }}</td>
+                <td class="text-center">{{ lead.phone }}</td>
+                <td class="text-center">{{ lead.created_at }}</td>
+                <td class="text-center">{{ lead.updated_at }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'base_pagination.html' %}
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/lead/main.js' %}"></script>{% endblock %}

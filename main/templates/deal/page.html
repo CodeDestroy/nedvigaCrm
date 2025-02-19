@@ -1,0 +1,304 @@
+{% extends 'base_view.html' %}
+{% load static %}
+{% block container %}
+<div class="row">
+    <div class="col-12 col-lg-5 mb-3 mb-lg-0">
+        {% if deal.lead %}
+        <a class="card mb-3" href="{{ deal.lead.get_absolute_url }}">
+            <div class="card-header border-bottom-0">
+                <div><div class="card-title">{{ deal.lead }}</div><div class="card-subtitle">Контакт</div></div>
+            </div>
+        </a>
+        {% endif %}
+        <form class="card" action="{% url 'main:deal-update' deal_id=deal.pk %}" method="post">
+            <div class="card-body">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.stage.id_for_label }}">{{ form.stage.label }}</label>
+                    {{ form.stage }}
+                    {% if form.stage.help_text %}<div class="form-text">{{ form.stage.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.stage.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.buy_object.id_for_label }}">{{ form.buy_object.label }}</label>
+                    {{ form.buy_object }}
+                    {% if form.buy_object.help_text %}<div class="form-text">{{ form.buy_object.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.buy_object.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                    {{ form.name }}
+                    {% if form.name.help_text %}<div class="form-text">{{ form.name.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.name.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.paytype.id_for_label }}">{{ form.paytype.label }}</label>
+                    {{ form.paytype }}
+                    {% if form.paytype.help_text %}<div class="form-text">{{ form.paytype.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.paytype.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.bank.id_for_label }}">{{ form.bank.label }}</label>
+                    {{ form.bank }}
+                    {% if form.bank.help_text %}<div class="form-text">{{ form.bank.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.bank.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.legal_status.id_for_label }}">{{ form.legal_status.label }}</label>
+                    {{ form.legal_status }}
+                    {% if form.legal_status.help_text %}<div class="form-text">{{ form.legal_status.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.legal_status.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.price.id_for_label }}">{{ form.price.label }}</label>
+                    {{ form.price }}
+                    {% if form.price.help_text %}<div class="form-text">{{ form.price.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.price.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.flat_id.id_for_label }}">{{ form.flat_id.label }}</label>
+                    {{ form.flat_id }}
+                    {% if form.flat_id.help_text %}<div class="form-text">{{ form.flat_id.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.flat_id.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        {{ form.office }}
+                        <label class="form-check-label" for="{{ form.office.id_for_label }}">{{ form.office.label }}</label>
+                    </div>
+                    {% if form.office.help_text %}<div class="form-text">{{ form.office.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.office.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        {{ form.solution }}
+                        <label class="form-check-label" for="{{ form.solution.id_for_label }}">{{ form.solution.label }}</label>
+                    </div>
+                    {% if form.solution.help_text %}<div class="form-text">{{ form.solution.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.solution.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        {{ form.onlineconfirm }}
+                        <label class="form-check-label" for="{{ form.onlineconfirm.id_for_label }}">{{ form.onlineconfirm.label }}</label>
+                    </div>
+                    {% if form.onlineconfirm.help_text %}<div class="form-text">{{ form.onlineconfirm.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.onlineconfirm.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.frm.id_for_label }}">{{ form.frm.label }}</label>
+                    {{ form.frm }}
+                    {% if form.frm.help_text %}<div class="form-text">{{ form.frm.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.frm.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.developer.id_for_label }}">{{ form.developer.label }}</label>
+                    {{ form.developer }}
+                    {% if form.developer.help_text %}<div class="form-text">{{ form.developer.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.developer.errors }}</div>
+                </div>
+                {% if request.user.is_staff %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
+                        {{ form.notes }}
+                        {% if form.notes.help_text %}<div class="form-text">{{ form.notes.help_text|safe }}</div>{% endif %}
+                        <div class="invalid-feedback">{{ form.notes.errors }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            {{ form.partner_paid }}
+                            <label class="form-check-label" for="{{ form.partner_paid.id_for_label }}">{{ form.partner_paid.label }}</label>
+                        </div>
+                        {% if form.partner_paid.help_text %}<div class="form-text">{{ form.partner_paid.help_text|safe }}</div>{% endif %}
+                        <div class="invalid-feedback">{{ form.partner_paid.errors }}</div>
+                    </div>
+                {% endif %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.sell_date.id_for_label }}">{{ form.sell_date.label }}</label>
+                    {{ form.sell_date }}
+                    {% if form.sell_date.help_text %}<div class="form-text">{{ form.sell_date.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.sell_date.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.reserved.id_for_label }}">{{ form.reserved.label }}</label>
+                    {{ form.reserved }}
+                    {% if form.reserved.help_text %}<div class="form-text">{{ form.reserved.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.reserved.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.responsible.id_for_label }}">{{ form.responsible.label }}</label>
+                    {{ form.responsible }}
+                    {% if form.responsible.help_text %}<div class="form-text">{{ form.responsible.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.responsible.errors }}</div>
+                </div>
+                <div class="form-check form-switch">
+                    {{ form.spam }}
+                    <label class="form-check-label" for="{{ form.spam.id_for_label }}">{{ form.spam.label }}</label>
+                </div>
+                {% if form.spam.help_text %}<div class="form-text">{{ form.spam.help_text|safe }}</div>{% endif %}
+                <div class="invalid-feedback">{{ form.spam.errors }}</div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+        {% if request.user.is_staff or request.user.broker %}
+        {% if deal.mortgage %}
+            <form class="card mt-3" action="{% url 'main:deal-mortgage-update' deal_id=deal.id mortgage_id=deal.mortgage.pk %}" method="post">
+        {% else %}
+            <form class="card mt-3" action="{% url 'main:deal-mortgage-create' deal_id=deal.id %}" method="post">
+        {% endif %}{% csrf_token %}
+            <div class="ribbon bg-red"><i class="ti ti-home"></i></div>
+            <div class="card-body">
+                <h3 class="card-title">Ипотека</h3>
+                {{ mortgage_form.as_div }}
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+        {% endif %}
+        {% if request.user.is_staff %}
+        {% if deal.money %}
+            <form class="card mt-3" action="{% url 'main:deal-money-update' deal_id=deal.id money_id=deal.money.pk %}" method="post">
+        {% else %}
+            <form class="card mt-3" action="{% url 'main:deal-money-create' deal_id=deal.id %}" method="post">
+        {% endif %}{% csrf_token %}
+            <div class="ribbon bg-red"><i class="ti ti-moneybag"></i></div>    
+            <div class="card-body">
+                <h3 class="card-title">Денежки</h3>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ money_form.agent.id_for_label }}">{{ money_form.agent.label }}</label>
+                    <div class="input-group">
+                        <label class="input-group-text" for="com_agent_percent"><i class="ti ti-percentage"></i></label>
+                        <input type="number" name="com_agent_percent" id="com_agent_percent" class="form-control" step="0.01" value="0">
+                        <label class="input-group-text" for="id_com_agent"><i class="ti ti-currency-rubel"></i></label>
+                        {{ money_form.agent }}
+                    </div>
+                    {% if money_form.agent.help_text %}<div class="form-text">{{ money_form.agent.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ money_form.agent.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ money_form.paid.id_for_label }}">{{ money_form.paid.label }}</label>
+                    {{ money_form.paid }}
+                    {% if money_form.paid.help_text %}<div class="form-text">{{ money_form.paid.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ money_form.paid.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ money_form.manager.id_for_label }}">{{ money_form.manager.label }}</label>
+                    <div class="input-group">
+                        <label class="input-group-text" for="com_manager_percent"><i class="ti ti-percentage"></i></label>
+                        <input type="number" name="com_manager_percent" id="com_manager_percent" class="form-control" step="0.01" value="0">
+                        <label class="input-group-text" for="id_com_manager"><i class="ti ti-currency-rubel"></i></label>
+                        {{ money_form.manager }}
+                    </div>
+                    {% if money_form.manager.help_text %}<div class="form-text">{{ money_form.manager.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ money_form.manager.errors }}</div>
+                </div>
+                <div class="row mb-3 align-items-end">
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            {{ money_form.get }}
+                            <label class="form-check-label" for="{{ money_form.get.id_for_label }}">{{ money_form.get.label }}</label>
+                        </div>
+                        {% if money_form.get.help_text %}<div class="form-text">{{ money_form.get.help_text|safe }}</div>{% endif %}
+                        <div class="invalid-feedback">{{ money_form.get.errors }}</div>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="{{ money_form.get_date.id_for_label }}">{{ money_form.get_date.label }}</label>
+                        {{ money_form.get_date }}
+                        {% if money_form.get_date.help_text %}<div class="form-text">{{ money_form.get_date.help_text|safe }}</div>{% endif %}
+                        <div class="invalid-feedback">{{ money_form.get_date.errors }}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ money_form.status.id_for_label }}">{{ money_form.status.label }}</label>
+                    {{ money_form.status }}
+                    {% if form.status.help_text %}<div class="form-text">{{ money_form.status.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ money_form.com_status.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ money_form.bill_date.id_for_label }}">{{ money_form.bill_date.label }}</label>
+                    {{ money_form.bill_date }}
+                    {% if money_form.bill_date.help_text %}<div class="form-text">{{ money_form.bill_date.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ money_form.bill_date.errors }}</div>
+                </div>
+                <label class="form-label" for="{{ money_form.planned_date.id_for_label }}">{{ money_form.planned_date.label }}</label>
+                {{ money_form.planned_date }}
+                {% if form.planned_date.help_text %}<div class="form-text">{{ money_form.planned_date.help_text|safe }}</div>{% endif %}
+                <div class="invalid-feedback">{{ money_form.planned_date.errors }}</div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+    <div class="col">
+        <div class="card-tabs">
+            <!-- Cards navigation -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a href="#activity" class="nav-link active" data-bs-toggle="tab" aria-selected="true" role="tab">Активность</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#tasks" class="nav-link" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">Задачи</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#shows" class="nav-link" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">Показы</a>
+                </li>
+            </ul>
+            <div class="card tab-content">
+                <div id="activity" class="tab-pane active show" role="tabpanel">
+                    <form class="card-body" action="{% url 'main:comment-create' type='deal' item_id=deal.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <label class="input-group-text" for="{{ comment_form.text.id_for_label }}">{{ comment_form.text.label }}</label>
+                            {{ comment_form.text }}
+                            <button type="submit" class="btn btn-success">Отправить</button>
+                        </div>
+                        {% if comment_form.text.help_text %}<div class="form-text">{{ comment_form.text.help_text|safe }}</div>{% endif %}
+                        {% if comment_form.text.errors %}<div class="invalid-feedback">{{ comment_form.text.errors }}</div>{% endif %}
+                    </form>
+                    <ul class="list-group list-group-flush">
+                        {% for action in deal.comments %}{% include 'comment/card.html' with action=action %}
+                        {% empty %}<li class="list-group-item">Активностей у сделки нет</li>{% endfor %}
+                    </ul>
+                </div>
+                <div id="tasks" class="tab-pane" role="tabpanel">
+                    <ul class="list-group list-group-flush">
+                        {% for task in deal.task_set.all %}
+                            <li class="list-group-item">
+                                <a href="{{ task.get_absolute_url }}" target="_blank" class="h3">{{ task }}</a>
+                                {% if task.date_to or task.date_notify %}
+                                <div class="row my-2">
+                                    <div class="col">{{ task.date_to }}</div>
+                                    <div class="col-auto">{{ task.date_notify }}</div>
+                                </div>
+                                {% endif %}
+                                {% if task.user %}<span class="badge bg-blue-lt">{{ task.user }}</span>{% endif %}
+                            </li>
+                        {% empty %}<li class="list-group-item">Задач нет</li>{% endfor %}
+                    </ul>
+                </div>
+                <div id="shows" class="tab-pane" role="tabpanel">
+                    <ul class="list-group list-group-flush">
+                        {% for show in deal.showing_set.all %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col">
+                                        <a href="{{ show.get_absolute_url }}" target="_blank" class="h3">{{ show.description }}{% if show.is_done %} <span class="badge bg-red text-red-fg text-uppercase">Закрыт</span>{% endif %}</a>
+                                        {% if show.date_to %}<p class="card-text">{{ show.date_to }}</p>{% endif %}
+                                    </div>
+                                    <div class="col-auto"><span class="badge bg-blue-lt">{{ show.user }}</span></div>
+                                </div>
+                            </li>
+                        {% empty %}<li class="list-group-item">Показов нет</li>{% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/deal.js' %}"></script>{% endblock %}

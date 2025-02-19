@@ -1,0 +1,6 @@
+.btn.collapsed .hide { display: none; }
+.btn:not(.collapsed) .hide { display: block; }
+.btn:not(.collapsed) .add { display: none; }
+.min-w-25 { min-width: 25% !important; }
+#photos-preview .ratio div { background-size: cover; background-position: center; }
+#photos-preview .btn-close { top: 5px; right: 18px; --bs-btn-close-opacity: 1; width: 0.75rem; height: 0.75rem; }

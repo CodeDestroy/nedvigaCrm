@@ -1,0 +1,53 @@
+{% load whatsapp %}
+<div class="card-body scrollable" style="max-height: 674px;">
+    <div class="chat">
+        <div class="chat-bubbles">
+            {% for msg in messages %}
+                <div class="chat-item">
+                    <div class="row align-items-end {% if msg.direction == 'out' %}justify-content-end{% endif %}">
+                        <div class="col col-lg-6">
+                            <div class="chat-bubble {% if msg.direction == 'out' %}chat-bubble-me{% endif %}">
+                                <div class="chat-bubble-title">
+                                    <div class="row">
+                                        <div class="col chat-bubble-author">{% if msg.direction == 'out' %}{{ msg.user }}{% else %}{{ msg.lead }}{% endif %}</div>
+                                        <div class="col-auto chat-bubble-date">{{ msg.created_at }}</div>
+                                    </div>
+                                </div>
+                                <div class="chat-bubble-body">
+                                    {% if '.jpg' in msg.body or '.gif' in msg.body or '.jpeg' in msg.body or '.png' in msg.body %}
+                                        <img src="{{ msg.body }}" alt="{{ msg.body }}" class="img-fluid">
+                                    {% else %}{{ msg.body|safe }}{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<form class="card-footer" action="{% url 'main:whatsapp-send' lead_id=lead.pk %}" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+    <div class="row">
+        <div class="col"><textarea name="message" id="message" class="form-control h-100"></textarea></div>
+        <div class="col-auto">
+            <label class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" name="image_first" value="image_first">
+                <span class="form-check-label">Сперва отправить изображение</span>
+            </label>
+            <input type="file" name="file" class="form-control mb-3">
+            <button type="button" class="btn btn-primary dropdown-toggle w-100 mb-3" data-bs-toggle="dropdown" aria-expanded="false">
+                Отправить шаблон
+            </button>
+            <div class="dropdown-menu" data-bs-popper="static">
+                {% for msg in templates %}
+                    {% tpl msg lead request.user as tpl %}
+                    <button type="button" class="dropdown-item" hx-get="{% url 'main:whatsapp-send-template' lead_id=lead.pk template_id=msg.pk %}" hx-trigger="click" hx-target="#message" hx-swap="innerHTML">{{ tpl|safe }}</button>
+                    {% if not forloop.last %}<div class="dropdown-divider"></div>{% endif %}
+                {% endfor %}
+            </div>
+            <button class="btn btn-success w-100" type="submit">Отправить</button>
+        </div>
+    </div>
+</form>

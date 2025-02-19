@@ -1,0 +1,34 @@
+{% extends 'base_view.html' %}
+
+{% block container %}
+<div class="row">
+    <div class="col">
+        <p class="border-bottom pb-3 border-primary border-2 fs-3 fw-medium">Консультация</p>
+        <div id="consultation" hx-get="{% url 'main:mortgage-status-ajax' status='consultation' %}" hx-swap="outerHTML" hx-trigger="load"></div>
+    </div>
+    <div class="col">
+        <p class="border-bottom pb-3 border-primary border-2 fs-3 fw-medium">Сбор документов</p>
+        <div id="collect_docs" hx-get="{% url 'main:mortgage-status-ajax' status='collect_docs' %}" hx-swap="outerHTML" hx-trigger="load"></div>
+    </div>
+    <div class="col">
+        <p class="border-bottom pb-3 border-primary border-2 fs-3 fw-medium">Рассмотрение</p>
+        <div id="review" hx-get="{% url 'main:mortgage-status-ajax' status='review' %}" hx-swap="outerHTML" hx-trigger="load"></div>
+    </div>
+    <div class="col">
+        <p class="border-bottom pb-3 border-primary border-2 fs-3 fw-medium">Подбор недвижимости</p>
+        <div id="estate" hx-get="{% url 'main:mortgage-status-ajax' status='estate' %}" hx-swap="outerHTML" hx-trigger="load"></div>
+    </div>
+    <div class="col">
+        <p class="border-bottom pb-3 border-primary border-2 fs-3 fw-medium">Сделка</p>
+        <div id="deal" hx-get="{% url 'main:mortgage-status-ajax' status='deal' %}" hx-swap="outerHTML" hx-trigger="load"></div>
+    </div>
+    <div class="col">
+        <p class="border-bottom pb-3 border-primary border-2 fs-3 fw-medium">Отказ банка</p>
+        <div id="bank_decline" hx-get="{% url 'main:mortgage-status-ajax' status='bank_decline' %}" hx-swap="outerHTML" hx-trigger="load"></div>
+    </div>
+    <div class="col">
+        <p class="border-bottom pb-3 border-primary border-2 fs-3 fw-medium">Отказ клиента</p>
+        <div id="client_decline" hx-get="{% url 'main:mortgage-status-ajax' status='client_decline' %}" hx-swap="outerHTML" hx-trigger="load"></div>
+    </div>
+</div>
+{% endblock %}

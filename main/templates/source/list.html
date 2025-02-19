@@ -1,0 +1,31 @@
+{% extends 'base_view.html' %}
+{% block container %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-vcenter table-bordered table-nowrap card-table">
+            <thead>
+            <tr><td class="w-1 text-center p-3">#</td><td class="text-center">Название</td><td class="w-1"></td></tr>
+            </thead>
+            <tbody>
+            {% for source in sources %}
+            <tr>
+                <td class="text-center p-3">{{ source.pk }}</td>
+                <td>{{ source.name }}</td>
+                <td>
+                    <div class="btn-group">
+                        {% url 'main:source-update' source_id=source.pk as url_update %}
+                        {% url 'main:modal-source-update' source_id=source.pk as url_modal_update %}
+                        {% include 'base_link.html' with url=url_update class='btn btn-icon btn-warning' get=url_modal_update text='<i class="ti ti-pencil icon m-0"></i>' %}
+                        {% url 'main:source-delete' source_id=source.pk as url_delete %}
+                        {% url 'main:modal-source-delete' source_id=source.pk as url_modal_delete %}
+                        {% include 'base_link.html' with url=url_delete class='btn btn-icon btn-danger' get=url_modal_delete text='<i class="ti ti-trash icon m-0"></i>' %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'base_pagination.html' %}
+</div>
+{% endblock %}

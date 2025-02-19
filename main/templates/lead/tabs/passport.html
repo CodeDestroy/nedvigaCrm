@@ -1,0 +1,9 @@
+{% if lead.passport %}
+    <form class="card-body" action="{% url 'main:lead-passport-update' lead_id=lead.id passport_id=lead.passport.pk %}" method="post">
+{% else %}
+    <form class="card-body" action="{% url 'main:lead-passport-create' lead_id=lead.id %}" method="post">
+{% endif %}
+    {% csrf_token %}
+    {{ passport_form.as_div }}
+    <button type="submit" class="btn btn-success">Сохранить</button>
+</form>

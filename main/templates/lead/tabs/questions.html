@@ -1,0 +1,9 @@
+{% if lead.questions %}
+    <form class="card-body" action="{% url 'main:lead-questions-update' lead_id=lead.id questions_id=lead.questions.pk %}" method="post">
+{% else %}
+    <form class="card-body" action="{% url 'main:lead-questions-create' lead_id=lead.id %}" method="post">
+{% endif %}
+    {% csrf_token %}
+    {{ questions_form.as_div }}
+    <button type="submit" class="btn btn-success">Сохранить</button>
+</form>

@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Вы успешно вышли!</title>
+    <!-- CSS files -->
+    <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet"/>
+</head>
+<body class="d-flex flex-column">
+<div class="page page-center">
+    <div class="container container-tight py-4">
+        <div class="text-center mb-4">
+            <a href="/" class="navbar-brand navbar-brand-autodark h2">
+                <img src="{% static 'img/logo.svg' %}" height="56" alt="Новостройки Воронеж">
+                Новостройки<br>Voronezh
+            </a>
+        </div>
+        <div class="card card-md">
+            <div class="card-body text-center">
+                <h2 class="h2 mb-4">Вы успешно вышли!</h2>
+                <a href="{% url 'main:login'%}">Нажмите, чтобы ещё раз авторизоваться.</a>
+            </div>
+        </div>
+        <div class="text-center text-muted mt-3">
+            <a href="{% url 'main:password_reset' %}" tabindex="-1">Забыли пароль?</a>
+        </div>
+    </div>
+</div>
+<!-- Libs JS -->
+<!-- Tabler Core -->
+<script src="{% static 'js/tabler.min.js' %}" defer></script>
+</body>
+</html>

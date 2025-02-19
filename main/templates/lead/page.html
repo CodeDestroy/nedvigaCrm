@@ -1,0 +1,202 @@
+{% extends 'base_view.html' %}
+{% load static %}
+{% block container %}
+<div class="row">
+    <div class="col-12 col-lg-5 mb-3 mb-lg-0">
+        <form class="card" action="{% url 'main:lead-update' lead_id=lead.pk %}" method="post">
+            <div class="card-body">
+                {% csrf_token %}
+                {% if request.user.sip %}
+                    <button type="button" class="btn btn-success mb-3 w-100" id="call" data-get="{% url 'main:call-make' phone=lead.phone %}" onclick="getHtml(this)">
+                        <i class="ti ti-phone icon"></i> Позвонить
+                    </button>
+                {% endif %}
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                        {{ form.phone }}
+                    </div>
+                    {% if form.phone.help_text %}<div class="form-text">{{ form.phone.help_text|safe }}</div>{% endif %}
+                    {% if form.phone.errors %}<div class="invalid-feedback">{{ form.phone.errors }}</div>{% endif %}
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.surname.id_for_label }}">{{ form.surname.label }}</label>
+                        {{ form.surname }}
+                    </div>
+                    {% if form.surname.help_text %}<div class="form-text">{{ form.surname.help_text|safe }}</div>{% endif %}
+                    {% if form.surname.errors %}<div class="invalid-feedback">{{ form.surname.errors }}</div>{% endif %}
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                        {{ form.name }}
+                    </div>
+                    {% if form.name.help_text %}<div class="form-text">{{ form.name.help_text|safe }}</div>{% endif %}
+                    {% if form.name.errors %}<div class="invalid-feedback">{{ form.name.errors }}</div>{% endif %}
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.patronymic.id_for_label }}">{{ form.patronymic.label }}</label>
+                        {{ form.patronymic }}
+                    </div>
+                    {% if form.patronymic.help_text %}<div class="form-text">{{ form.patronymic.help_text|safe }}</div>{% endif %}
+                    {% if form.patronymic.errors %}<div class="invalid-feedback">{{ form.patronymic.errors }}</div>{% endif %}
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                        {{ form.email }}
+                    </div>
+                    {% if form.email.help_text %}<div class="form-text">{{ form.email.help_text|safe }}</div>{% endif %}
+                    {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors }}</div>{% endif %}
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.processed.id_for_label }}">{{ form.processed.label }}</label>
+                        {{ form.processed }}
+                    </div>
+                    {% if form.processed.help_text %}<div class="form-text">{{ form.processed.help_text|safe }}</div>{% endif %}
+                    {% if form.processed.errors %}<div class="invalid-feedback">{{ form.processed.errors }}</div>{% endif %}
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.warm.id_for_label }}">{{ form.warm.label }}</label>
+                        {{ form.warm }}
+                    </div>
+                    {% if form.warm.help_text %}<div class="form-text">{{ form.warm.help_text|safe }}</div>{% endif %}
+                    {% if form.warm.errors %}<div class="invalid-feedback">{{ form.warm.errors }}</div>{% endif %}
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        {{ form.deferred }}
+                        <label class="form-check-label" for="{{ form.deferred.auto_id }}">{{ form.deferred.label }}</label>
+                    </div>
+                </div>
+                {% if request.user.is_staff %}
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <label class="input-group-text w-25" for="{{ form.client.id_for_label }}">{{ form.client.label }}</label>
+                            {{ form.client }}
+                            <input type="text" value="{{ lead.client|default_if_none:"" }}" class="form-control name" readonly>
+                            <button data-bs-toggle="dropdown" type="button" class="btn dropdown-toggle" aria-expanded="false">Выбрать</button>
+                            <div class="dropdown-menu dropdown-menu-end" id="clientList">
+                                <div class="px-1">
+                                    <input type="text" class="form-control" name="chars" data-get="{% url 'main:ajax-search-lead' %}" data-target="#clientList .clients" oninput="getInputHtml(this)" data-swap="innerHtml" placeholder="ФИО, номер телефона" autocomplete="off">
+                                </div>
+                                <hr class="dropdown-divider my-1">
+                                <div class="clients"></div>
+                            </div>
+                        </div>
+                        {% if form.client.help_text %}<div class="form-text">{{ form.client.help_text|safe }}</div>{% endif %}
+                        {% if form.client.errors %}<div class="invalid-feedback">{{ form.client.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <label class="input-group-text w-25" for="{{ form.partner.id_for_label }}">{{ form.partner.label }}</label>
+                            {{ form.partner }}
+                            <input type="text" value="{{ lead.partner|default_if_none:"" }}" class="form-control name" readonly>
+                            <button data-bs-toggle="dropdown" type="button" class="btn dropdown-toggle" aria-expanded="false">Выбрать</button>
+                            <div class="dropdown-menu dropdown-menu-end" id="partnerList">
+                                <div class="px-1">
+                                    <input type="text" class="form-control" name="chars" data-get="{% url 'main:ajax-search-partner' %}" data-target="#partnerList .partners" oninput="getInputHtml(this)" data-swap="innerHtml" placeholder="ФИО, номер телефона" autocomplete="off">
+                                </div>
+                                <hr class="dropdown-divider my-1">
+                                <div class="partners"></div>
+                            </div>
+                        </div>
+                        {% if form.partner.help_text %}<div class="form-text">{{ form.partner.help_text|safe }}</div>{% endif %}
+                        {% if form.partner.errors %}<div class="invalid-feedback">{{ form.partner.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <label class="input-group-text w-25" for="{{ form.responsible.id_for_label }}">{{ form.responsible.label }}</label>
+                            {{ form.responsible }}
+                        </div>
+                        {% if form.responsible.help_text %}<div class="form-text">{{ form.responsible.help_text|safe }}</div>{% endif %}
+                        {% if form.responsible.errors %}<div class="invalid-feedback">{{ form.responsible.errors }}</div>{% endif %}
+                    </div>
+                {% endif %}
+                <div class="form-check form-switch">
+                    {{ form.spam }}
+                    <label class="form-check-label" for="{{ form.spam.id_for_label }}">{{ form.spam.label }}</label>
+                </div>
+                {% if form.spam.help_text %}<div class="form-text">{{ form.spam.help_text|safe }}</div>{% endif %}
+                <div class="invalid-feedback">{{ form.spam.errors }}</div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="card-title">Список сделок</div>
+                <div class="card-actions">
+                    {% url 'main:deal-create' as url_form %}
+                    {% url 'main:modal-lead-deal-create' lead_id=lead.pk as url_modal %}
+                    {% include 'base_link.html' with url=url_form class='btn btn-success btn-icon' get=url_modal text='<i class="ti ti-plus icon"></i>' %}
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap datatable">
+                    <thead>
+                    <tr>
+                        <th class="w-1">#</th>
+                        <th>Название</th>
+                        <th class="w-1">Стадия</th>
+                        <th class="w-1">Ответственный</th>
+                        <th class="w-1">Создание</th>
+                        <th class="w-1">Обновление</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for deal in lead.deal_set.all %}
+                        <tr>
+                        <td>{{ deal.pk }}</td>
+                        <td><a href="{{ deal.get_absolute_url }}">{{ deal }}</a></td>
+                        <td><a href="{{ deal.get_absolute_url }}">{{ deal.stage }}</a></td>
+                        <td><a href="{{ deal.get_absolute_url }}">{{ deal.responsible }}</a></td>
+                        <td><a href="{{ deal.get_absolute_url }}">{{ deal.created_at|date:"Y.m.d в H:m" }}</a></td>
+                        <td><a href="{{ deal.get_absolute_url }}">{{ deal.updated_at|date:"Y.m.d в H:m" }}</a></td>
+                        </tr>
+                        {% empty %}<tr><td colspan="6" class="text-center">Сделок нет</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card-tabs">
+            <!-- Cards navigation -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a href="#tab" class="nav-link active" data-bs-toggle="tab" aria-selected="true" role="tab" hx-get="{% url 'main:lead-tab-activity' lead_id=lead.pk %}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="click">Активность</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#tab" class="nav-link" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" hx-get="{% url 'main:lead-tab-source' lead_id=lead.pk %}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="click">Источники</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#tab" class="nav-link" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" hx-get="{% url 'main:lead-tab-questions' lead_id=lead.pk %}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="click">Вопросы</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#tab" class="nav-link" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" hx-get="{% url 'main:lead-tab-passport' lead_id=lead.pk %}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="click">Паспорт</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#tab" class="nav-link" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" hx-get="{% url 'main:lead-tab-tasks' lead_id=lead.pk %}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="click">Задачи</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#tab" class="nav-link" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" hx-get="{% url 'main:lead-tab-shows' lead_id=lead.pk %}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="click">Показы</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#tab" class="nav-link" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" hx-get="{% url 'main:lead-tab-whatsapp' lead_id=lead.pk %}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="click">Whatsapp</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a href="#tab" class="nav-link" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" hx-get="{% url 'main:lead-tab-calls' lead_id=lead.pk %}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="click">Звонки</a>
+                </li>
+            </ul>
+            <div class="card" id="tab" hx-get="{% url 'main:lead-tab-activity' lead_id=lead.pk %}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="load"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/lead/ajax.js' %}"></script>{% endblock %}

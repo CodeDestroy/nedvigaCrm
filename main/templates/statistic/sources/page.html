@@ -1,0 +1,60 @@
+{% extends 'base_view.html' %}
+{% block container %}
+<ul class="nav nav-bordered mb-3">
+    {% for f in funnels %}
+    <li class="nav-item">
+        <a class="nav-link{% if f.pk == funnel.pk %} active{% endif %}" href="{% url 'main:sources-stats' funnel_id=f.pk %}">{{ f }}</a>
+    </li>
+    {% endfor %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:sources-stats-empty' %}">Без воронки</a>
+    </li>
+</ul>
+<div class="card mb-3">
+    <form class="card-body" method="get">
+        <div class="row">
+            <div class="col"><input type="date" name="from" class="form-control" value="{{ from|date:"Y-m-d" }}"></div>
+            <div class="col"><input type="date" name="to" class="form-control" value="{{ to|date:"Y-m-d" }}"></div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary btn-icon"><i class="ti ti-refresh icon"></i></button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="card-tabs">
+    <ul class="nav nav-tabs" role="tablist">
+        {% for stage in funnel.stage_set.all %}
+        <li class="nav-item" role="presentation"><a href="#tab" class="nav-link{% if forloop.first %} active{% endif %}" data-bs-toggle="tab" aria-selected="true" role="tab" hx-get="{% url 'main:sources-stats-ajax' funnel_id=funnel.pk stage_id=stage.pk %}?from={{ from|date:"Y-m-d" }}&to={{ to|date:"Y-m-d" }}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="click">{{ stage }}</a></li>
+        {% endfor %}
+    </ul>
+    <div class="card">
+        <div class="card-body">
+            <button class="btn btn-success" type="button" onclick="tableToExcel('deals', 'Сделки', 'Статистика_По_Сделкам.xls')">Скачать</button>
+        </div>
+        <div id="tab" class="table-responsive" hx-get="{% url 'main:sources-stats-ajax' funnel_id=funnel.pk stage_id=funnel.stage_set.first.pk %}?from={{ from|date:"Y-m-d" }}&to={{ to|date:"Y-m-d" }}" hx-target="#tab" hx-swap="innerHTML" hx-trigger="load"></div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="//cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<script>
+    let tableToExcel = (function() {
+        let uri = 'data:application/vnd.ms-excel;base64,',
+        template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>',
+        base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) },
+        format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) },
+        downloadURI = function(uri, name) {
+            let link = document.createElement("a");
+            link.download = name;
+            link.href = uri;
+            link.click();
+        }
+        return function(table, name, fileName) {
+            if (!table.nodeType) table = document.getElementById(table)
+            let ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+            let resuri = uri + base64(format(template, ctx))
+            downloadURI(resuri, fileName);
+        }
+    })();
+</script>
+{% endblock %}

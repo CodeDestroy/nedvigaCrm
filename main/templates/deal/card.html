@@ -1,0 +1,9 @@
+<a class="card mb-3 card-link-pop" href="{{ deal.get_absolute_url }}">
+    <input type="hidden" name="deal_id" value="{{ deal.pk|stringformat:"i" }}">
+    {% if deal.responsible %}<div class="badge bg-blue-lt">{{ deal.responsible }}</div>{% endif %}
+    <div class="card-body p-2">
+        <div class="h4 card-title">{{ deal }}</div>
+        <div class="card-text text-decoration-none small"><i class="ti ti-user-dollar me-2"></i> {{ deal.lead }}</div>
+    </div>
+    <div class="card-footer p-2 text-muted small"><i class="ti ti-calendar-bolt me-2"></i>{{ deal.created_at }}</div>
+</a>

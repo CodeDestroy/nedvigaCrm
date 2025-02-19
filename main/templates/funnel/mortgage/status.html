@@ -1,0 +1,6 @@
+{% for deal in deals %}{% include 'deal/card.html' with deal=deal %}{% endfor %}
+{% if is_paginated and page_obj.has_next %}
+<div id="{{ status }}">
+    <button class="btn btn-ghost-primary w-100" hx-get="{% url 'main:mortgage-status-ajax' status=status %}?page={{ page_obj.next_page_number }}" hx-target="#{{ status }}" hx-swap="outerHTML" hx-trigger="click"><i class="ti ti-plus icon"></i>Загрузить ещё</button>
+</div>
+{% endif %}
