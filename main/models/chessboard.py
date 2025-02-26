@@ -50,7 +50,7 @@ class Apartment(CreatedUpdatedMixin):
     area = models.FloatField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='available')
-
+    section = models.IntegerField(null=True, default=1)
     def __str__(self):
         return f"Квартира {self.number} - {self.building.name}"
     

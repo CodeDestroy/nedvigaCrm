@@ -44,68 +44,221 @@
 <div class="card">
     <div class="card-body">
         <h1>Дом: {{ building.name }}</h1>
-        <table class="table table-bordered text-center">
-            <thead>
-                <tr>
-                    <th>Этаж \ Колонка</th>
-                    {% for col in column_range %}
-                        <th>Колонка {{ col }}</th>
+        {% for section in sections %}
+            <h3>Секция: {{ section }}</h3>
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>Этаж \ Колонка</th>
+                        {% for col in column_range %}
+                            <th>Колонка {{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for floor, columns in floors.items %}
+                    <tr>
+                        <td style="width: 100px;"><strong>{{ floor }} этаж</strong></td>
+                        
+                        {% for col in column_range %}
+                            <td>
+                                {% if columns|get_item:col %}
+                                    {% for apartment in columns|get_item:col %}
+                                        {% if apartment.section == section %}
+                                            <table class="table-bordered">
+                                                <tr>
+                                                    <td class="w-7 p-2">
+                                                        <a href="#" class="apartment-link" 
+                                                            data-number="{{ apartment.number }}" 
+                                                            data-area="{{ apartment.area }}"
+                                                            data-window-orientation="{{ apartment.window_orientation }}"
+                                                            data-rooms="{{ apartment.rooms }}"
+                                                            data-apartment-type="{{ apartment.apartment_type }}"
+                                                            data-price="{{ apartment.price }}"
+                                                        >
+                                                            №{{ apartment.number }}
+                                                        </a>
+                                                    </td>
+                                                    <td class="w-7 p-2">
+                                                        <a href="#" class="apartment-link"
+                                                            data-number="{{ apartment.number }}" 
+                                                            data-area="{{ apartment.area }}"
+                                                            data-window-orientation="{{ apartment.window_orientation }}"
+                                                            data-rooms="{{ apartment.rooms }}"
+                                                            data-apartment-type="{{ apartment.apartment_type }}"
+                                                            data-price="{{ apartment.price }}"
+                                                        >
+                                                            {{ apartment.window_orientation }}
+                                                        </a>
+                                                    </td>
+                                                    <td class="w-7 p-2">
+                                                        <a href="#" class="apartment-link" 
+                                                            data-number="{{ apartment.number }}" 
+                                                            data-area="{{ apartment.area }}"
+                                                            data-window-orientation="{{ apartment.window_orientation }}"
+                                                            data-rooms="{{ apartment.rooms }}"
+                                                            data-apartment-type="{{ apartment.apartment_type }}"
+                                                            data-price="{{ apartment.price }}"
+                                                        >
+                                                            {{ apartment.area }} м²
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="w-7 p-2">
+                                                        <a href="#" class="apartment-link" 
+                                                            data-number="{{ apartment.number }}" 
+                                                            data-area="{{ apartment.area }}"
+                                                            data-window-orientation="{{ apartment.window_orientation }}"
+                                                            data-rooms="{{ apartment.rooms }}"
+                                                            data-apartment-type="{{ apartment.apartment_type }}"
+                                                            data-price="{{ apartment.price }}"
+                                                        >
+                                                            {{ apartment.rooms }}к
+                                                        </a>
+                                                    </td>
+                                                    <td class="w-7 p-2">
+                                                        <a href="#" class="apartment-link" 
+                                                            data-number="{{ apartment.number }}" 
+                                                            data-area="{{ apartment.area }}"
+                                                            data-window-orientation="{{ apartment.window_orientation }}"
+                                                            data-rooms="{{ apartment.rooms }}"
+                                                            data-apartment-type="{{ apartment.apartment_type }}"
+                                                            data-price="{{ apartment.price }}"
+                                                        >
+                                                            {{ apartment.apartment_type }}
+                                                        </a>
+                                                    </td>
+                                                    <td class="w-7 p-2">
+                                                        <a href="#" class="apartment-link" 
+                                                            data-number="{{ apartment.number }}" 
+                                                            data-area="{{ apartment.area }}"
+                                                            data-window-orientation="{{ apartment.window_orientation }}"
+                                                            data-rooms="{{ apartment.rooms }}"
+                                                            data-apartment-type="{{ apartment.apartment_type }}"
+                                                            data-price="{{ apartment.price }}"
+                                                        >
+                                                            {{ apartment.price }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        {%endif%}
+                                    {% endfor %}
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
                     {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for floor, columns in floors.items %}
-                <tr>
-                    <td style="width: 100px;"><strong>{{ floor }} этаж</strong></td>
-                    
-                    {% for col in column_range %}
-                        <td>
-                            {% if columns|get_item:col %}
-                                {% for apartment in columns|get_item:col %}
-                                    <a href="#" class="apartment-link" data-number="{{ apartment.number }}" data-area="{{ apartment.area }}">
-                                        №{{ apartment.number }}<br>
-                                        {{ apartment.area }} м²
-                                    </a>
-                                {% endfor %}
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        {% endfor %}
     </div>
 </div>
-
-<!-- Модальное окно -->
 <div id="apartment-modal" class="modal">
+    <form method="post" action="{{ url }}" class="modal-content">
+        {% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Детали квартиры</h5>
+            <!-- <button class="modal-close">&times;</button> -->
+            <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="input-group mb-3">
+                <label class="input-group-text min-w-25" for="id_surname">Номер</label>
+                <input type="text" name="number" class="form-control" maxlength="100" id="modal-apartment-number">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text min-w-25" for="id_surname">Вид</label>
+                <input type="text" name="window-orientation" class="form-control" maxlength="100" id="modal-apartment-window-orientation">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text min-w-25" for="id_surname">Площадь</label>
+                <input type="text" name="area" class="form-control" maxlength="100" id="modal-apartment-area">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text min-w-25" for="id_surname">Комнаты</label>
+                <input type="text" name="rooms" class="form-control" maxlength="100" id="modal-apartment-rooms">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text min-w-25" for="id_surname">Тип</label>
+                <input type="text" name="type" class="form-control" maxlength="100" id="modal-apartment-type">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text min-w-25" for="id_surname">Цена</label>
+                <input type="text" name="price" class="form-control" maxlength="100" id="modal-apartment-price">
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-secondary modal-close" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-success">Создать</button>
+        </div>
+    </form>
+</div>
+<!-- Модальное окно -->
+<!-- <div id="apartment-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title">Детали квартиры</h5>
             <button class="modal-close">&times;</button>
         </div>
-        <div class="modal-body">
-            <p><strong>Номер:</strong> <span id="modal-apartment-number"></span></p>
-            <p><strong>Площадь:</strong> <span id="modal-apartment-area"></span> м²</p>
-        </div>
+        <form>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <label class="input-group-text min-w-25" for="id_surname">Номер</label>
+                    <input type="text" name="number" class="form-control" maxlength="100" id="modal-apartment-number">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text min-w-25" for="id_surname">Вид</label>
+                    <input type="text" name="window-orientation" class="form-control" maxlength="100" id="modal-apartment-window-orientation">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text min-w-25" for="id_surname">Площадь</label>
+                    <input type="text" name="area" class="form-control" maxlength="100" id="modal-apartment-area">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text min-w-25" for="id_surname">Комнаты</label>
+                    <input type="text" name="rooms" class="form-control" maxlength="100" id="modal-apartment-rooms">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text min-w-25" for="id_surname">Тип</label>
+                    <input type="text" name="type" class="form-control" maxlength="100" id="modal-apartment-type">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text min-w-25" for="id_surname">Цена</label>
+                    <input type="text" name="price" class="form-control" maxlength="100" id="modal-apartment-price">
+                </div>
+                
+            </div>
+        </form>
+        
     </div>
-</div>
+</div> -->
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const modal = document.getElementById("apartment-modal");
         const modalNumber = document.getElementById("modal-apartment-number");
+        const modalWindowOrientation = document.getElementById("modal-apartment-window-orientation");
         const modalArea = document.getElementById("modal-apartment-area");
+        const modalRooms = document.getElementById("modal-apartment-rooms");
+        const modalType = document.getElementById("modal-apartment-type");
+        const modalPrice = document.getElementById("modal-apartment-price");
         const closeModalButton = document.querySelector(".modal-close");
 
         document.querySelectorAll(".apartment-link").forEach(link => {
             link.addEventListener("click", function(event) {
                 event.preventDefault();
-
+                console.log(this.dataset)
                 // Заполняем модальное окно данными
-                modalNumber.textContent = this.dataset.number;
-                modalArea.textContent = this.dataset.area;
-
+                modalNumber.value = this.dataset.number;
+                modalWindowOrientation.value = this.dataset.windowOrientation;
+                modalArea.value = this.dataset.area;
+                modalRooms.value = this.dataset.rooms;
+                modalType.value = this.dataset.apartmentType;
+                modalPrice.value = this.dataset.price;
                 // Показываем модальное окно
                 modal.style.display = "block";
             });

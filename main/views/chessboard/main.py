@@ -89,12 +89,15 @@ class BuildingDetailView(View):
         apartments = Apartment.objects.filter(building_id=building_id).order_by('-floor', 'col')
 
         floors = {}
+        sections = {}
         column_range = set()
 
         for apartment in apartments:
             floor = apartment.floor
             col = apartment.col
-
+            section = apartment.section
+            if section not in sections:
+                sections[section] = {}
             if floor not in floors:
                 floors[floor] = {}
             if col not in floors[floor]:
@@ -108,28 +111,7 @@ class BuildingDetailView(View):
         context = {
             'building': building_instance,
             'floors': floors,
+            'sections': reversed(sections),
             'column_range': column_range
         }
         return render(request, 'chessboard/building_detail.html', context)
-
-    
-    """ model = Building
-    template_name = 'building_detail.html'
-    context_object_name = 'building'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Получаем все квартиры данного дома и группируем их по этажам
-        apartments = Apartment.objects.filter(building=self.object).order_by('-floor')
-        floors = {}
-        for apartment in apartments:
-            if apartment.floor not in floors:
-                floors[apartment.floor] = []
-            floors[apartment.floor].append(apartment)
-        
-        context['floors'] = floors
-        return context """
-    """ def get(self, request, *args, **kwargs):
-        building = get_object_or_404(Building, pk=kwargs.get('building_id'))
-        return render(request, 'chessboard/building_detail.html', {'building': building}) """
