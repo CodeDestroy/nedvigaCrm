@@ -33,12 +33,6 @@
         align-items: center;
     }
 
-    .modal-close {
-        cursor: pointer;
-        font-size: 20px;
-        border: none;
-        background: none;
-    }
 </style>
 
 <div class="card">
@@ -65,7 +59,7 @@
                                 {% if columns|get_item:col %}
                                     {% for apartment in columns|get_item:col %}
                                         {% if apartment.section == section %}
-                                            <table class="table-bordered">
+                                            <table class="table-bordered m-auto" >
                                                 <tr>
                                                     <td class="w-7 p-2">
                                                         <a href="#" class="apartment-link" 
@@ -159,10 +153,10 @@
     <form method="post" action="{{ url }}" class="modal-content">
         {% csrf_token %}
         {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-        <div class="modal-header">
+        <div class="modal-header px-0">
             <h5 class="modal-title" id="modalLabel">Детали квартиры</h5>
             <!-- <button class="modal-close">&times;</button> -->
-            <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+            <button type="button" class="modal-close btn-close" style="margin-right: 0; margin-left: auto;" data-bs-dismiss="modal" aria-label="Close">&times;</button>
         </div>
         <div class="modal-body">
             <div class="input-group mb-3">
@@ -192,8 +186,8 @@
             
         </div>
         <div class="modal-footer">
-            <button type="reset" class="btn btn-secondary modal-close" data-bs-dismiss="modal">Отмена</button>
-            <button type="submit" class="btn btn-success">Создать</button>
+            <button type="reset" class="btn btn-info modal-close" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-success">Сохранить</button>
         </div>
     </form>
 </div>
