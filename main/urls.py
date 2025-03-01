@@ -328,9 +328,9 @@ urlpatterns = [
         path('', views.ResidentialComplexListView.as_view(), name='residential_complex_list'),
         path('complex/<int:complex_id>/', views.ResidentialComplexDetailView.as_view(), name='residential_complex_detail'),
         path('building/<int:building_id>/', views.BuildingDetailView.as_view(), name='building_detail'),
-        """ path('change/', include([
-            path('appartament/<int:appartment_id>/', views.AppartmentDetailView.as_view(), name='appartment_detail'),
-        ])) """
+        #path('change/', include([
+        #    path('appartament/<int:appartment_id>/', views.AppartmentDetailView.as_view(), name='appartment_detail'),
+        #]))
         #path('<int:lead_id>/send/', views.WhatsappSendMessage(), name='whatsapp-send'),
         #path('<int:lead_id>/send/template/<int:template_id>/', views.WhatsappSendTemplate(),
         #     name='whatsapp-send-template'),
