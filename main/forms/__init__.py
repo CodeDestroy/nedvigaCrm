@@ -18,9 +18,11 @@ from .stage import StageForm
 from .task import TaskForm
 from .questions import QuestionsForm
 from .user import UserForm, UserUpdateForm
+from .chess import *
 
 
 __all__ = [
+    'ApartmentForm',
     'CustomAuthenticationForm',
     'CustomPasswordChangeForm',
     'CustomPasswordResetForm',

@@ -1,1 +1,1 @@
-from .main import ResidentialComplexListView, ResidentialComplexDetailView, BuildingDetailView
+from .main import *

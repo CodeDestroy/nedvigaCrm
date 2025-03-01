@@ -63,6 +63,7 @@
                                                 <tr>
                                                     <td class="w-7 p-2">
                                                         <a href="#" class="apartment-link" 
+                                                            data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
                                                             data-window-orientation="{{ apartment.window_orientation }}"
@@ -75,6 +76,7 @@
                                                     </td>
                                                     <td class="w-7 p-2">
                                                         <a href="#" class="apartment-link"
+                                                            data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
                                                             data-window-orientation="{{ apartment.window_orientation }}"
@@ -87,6 +89,7 @@
                                                     </td>
                                                     <td class="w-7 p-2">
                                                         <a href="#" class="apartment-link" 
+                                                            data-id="{{ apartment.id }}"
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
                                                             data-window-orientation="{{ apartment.window_orientation }}"
@@ -101,6 +104,7 @@
                                                 <tr>
                                                     <td class="w-7 p-2">
                                                         <a href="#" class="apartment-link" 
+                                                            data-id="{{ apartment.id }}"    
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
                                                             data-window-orientation="{{ apartment.window_orientation }}"
@@ -113,6 +117,7 @@
                                                     </td>
                                                     <td class="w-7 p-2">
                                                         <a href="#" class="apartment-link" 
+                                                            data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
                                                             data-window-orientation="{{ apartment.window_orientation }}"
@@ -125,6 +130,7 @@
                                                     </td>
                                                     <td class="w-7 p-2">
                                                         <a href="#" class="apartment-link" 
+                                                            data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
                                                             data-window-orientation="{{ apartment.window_orientation }}"
@@ -150,13 +156,13 @@
     </div>
 </div>
 <div id="apartment-modal" class="modal">
-    <form method="post" action="{{ url }}" class="modal-content">
+    <form method="post" class="modal-content" id="apartment-form">
         {% csrf_token %}
         {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <input type="hidden" name="apartment-id" id="apartment-id" value="-1">
         <div class="modal-header px-0">
             <h5 class="modal-title" id="modalLabel">Детали квартиры</h5>
-            <!-- <button class="modal-close">&times;</button> -->
-            <button type="button" class="modal-close btn-close" style="margin-right: 0; margin-left: auto;" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+            <button type="button" class="modal-close btn-close" id="modal-close-top" style="margin-right: 0; margin-left: auto;" data-bs-dismiss="modal" aria-label="Close">&times;</button>
         </div>
         <div class="modal-body">
             <div class="input-group mb-3">
@@ -186,67 +192,59 @@
             
         </div>
         <div class="modal-footer">
-            <button type="reset" class="btn btn-info modal-close" data-bs-dismiss="modal">Отмена</button>
+            <button type="reset" class="btn btn-info modal-close" id="modal-close-bottom" data-bs-dismiss="modal">Отмена</button>
             <button type="submit" class="btn btn-success">Сохранить</button>
         </div>
     </form>
 </div>
-<!-- Модальное окно -->
-<!-- <div id="apartment-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Детали квартиры</h5>
-            <button class="modal-close">&times;</button>
-        </div>
-        <form>
-            <div class="modal-body">
-                <div class="input-group mb-3">
-                    <label class="input-group-text min-w-25" for="id_surname">Номер</label>
-                    <input type="text" name="number" class="form-control" maxlength="100" id="modal-apartment-number">
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text min-w-25" for="id_surname">Вид</label>
-                    <input type="text" name="window-orientation" class="form-control" maxlength="100" id="modal-apartment-window-orientation">
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text min-w-25" for="id_surname">Площадь</label>
-                    <input type="text" name="area" class="form-control" maxlength="100" id="modal-apartment-area">
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text min-w-25" for="id_surname">Комнаты</label>
-                    <input type="text" name="rooms" class="form-control" maxlength="100" id="modal-apartment-rooms">
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text min-w-25" for="id_surname">Тип</label>
-                    <input type="text" name="type" class="form-control" maxlength="100" id="modal-apartment-type">
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text min-w-25" for="id_surname">Цена</label>
-                    <input type="text" name="price" class="form-control" maxlength="100" id="modal-apartment-price">
-                </div>
-                
-            </div>
-        </form>
-        
-    </div>
-</div> -->
+
 
 <script>
+
+    document.querySelector("#apartment-modal form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+        const apartmentId = formData.get("apartment-id");
+
+        fetch(`/chess/apartment/${apartmentId}/update/`, {  // Слеш в конце!
+            method: "POST",
+            headers: {
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                location.reload();  // Обновляем страницу
+            } else {
+                alert("Ошибка: " + (data.error || "Неизвестная ошибка"));
+            }
+        })
+        .catch(error => console.error("Ошибка:", error));
+    });
     document.addEventListener("DOMContentLoaded", function() {
         const modal = document.getElementById("apartment-modal");
         const modalNumber = document.getElementById("modal-apartment-number");
+        const modalId = document.getElementById("apartment-id");
         const modalWindowOrientation = document.getElementById("modal-apartment-window-orientation");
         const modalArea = document.getElementById("modal-apartment-area");
         const modalRooms = document.getElementById("modal-apartment-rooms");
         const modalType = document.getElementById("modal-apartment-type");
         const modalPrice = document.getElementById("modal-apartment-price");
-        const closeModalButton = document.querySelector(".modal-close");
+        const closeModalButton = document.getElementById("modal-close-top");
+        const closeModalButton2 = document.getElementById("modal-close-bottom");
+        const form = document.getElementById("apartment-form");
 
         document.querySelectorAll(".apartment-link").forEach(link => {
             link.addEventListener("click", function(event) {
                 event.preventDefault();
                 console.log(this.dataset)
                 // Заполняем модальное окно данными
+                modalId.value = this.dataset.id;
                 modalNumber.value = this.dataset.number;
                 modalWindowOrientation.value = this.dataset.windowOrientation;
                 modalArea.value = this.dataset.area;
@@ -258,11 +256,43 @@
             });
         });
 
+        /* form.addEventListener("submit", function (event) {
+            console.log("Отправка формы")
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            fetch('/chess/apartment/' + formData.get("apartment-id") + '/update/', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",  // Передача FormData
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
+                body: new URLSearchParams(formData)
+                
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                    modal.style.display = "none";
+                    location.reload();  // Обновление страницы
+                } else {
+                    alert("Ошибка: " + (data.error || "Неизвестная ошибка"));
+                }
+            })
+            .catch(error => console.error("Ошибка:", error));
+        }); */
+
         // Закрытие окна при клике на кнопку
         closeModalButton.addEventListener("click", function() {
+            console.log(this)
             modal.style.display = "none";
         });
 
+        closeModalButton2.addEventListener("click", function() {
+            console.log(this)
+            modal.style.display = "none";
+        });
         // Закрытие окна при клике вне контента
         window.addEventListener("click", function(event) {
             if (event.target === modal) {

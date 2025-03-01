@@ -327,13 +327,15 @@ urlpatterns = [
     path('chess/', include([
         path('', views.ResidentialComplexListView.as_view(), name='residential_complex_list'),
         path('complex/<int:complex_id>/', views.ResidentialComplexDetailView.as_view(), name='residential_complex_detail'),
-        path('building/<int:building_id>/', views.BuildingDetailView.as_view(), name='building_detail'),
-        #path('change/', include([
-        #    path('appartament/<int:appartment_id>/', views.AppartmentDetailView.as_view(), name='appartment_detail'),
-        #]))
-        #path('<int:lead_id>/send/', views.WhatsappSendMessage(), name='whatsapp-send'),
-        #path('<int:lead_id>/send/template/<int:template_id>/', views.WhatsappSendTemplate(),
-        #     name='whatsapp-send-template'),
-        #path('<int:lead_id>/get/ajax/', views.WhatsappLeadView(), name='whatsapp-get-ajax'),
+        path('building/', include([
+            path('create/', views.BuildingCreateView.as_view(), name='building_create'),
+            path('<int:building_id>/', views.BuildingDetailView.as_view(), name='building_detail'),
+            path('<int:building_id>/update/', views.BuildingUpdateView.as_view(), name='building_update'),
+        ])),
+        path('apartment/', include([
+            path('create/', views.ApartmentCreateView.as_view(), name='apartment_create'),
+            path('<int:apartment_id>/update/', views.ApartmentUpdateView.as_view(), name='apartment_update'),
+        ]))
+    
     ])),
 ]
