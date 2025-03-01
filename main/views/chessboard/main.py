@@ -121,23 +121,19 @@ class BuildingDetailView(ListView, BaseView):
 
 class ApartmentCreateView(ListView, BaseView):
     def post(self, request):
-            apartment_id = request.POST.get("apartment-id")
-            if not apartment_id:
-                return JsonResponse({"error": "Не указан ID квартиры"}, status=400)
-
-            apartment = get_object_or_404(Apartment, id=apartment_id)
-
-            # Обновляем данные из формы
-            apartment.number = request.POST.get("number", apartment.number)
-            apartment.window_orientation = request.POST.get("window-orientation", apartment.window_orientation)
-            apartment.area = request.POST.get("area", apartment.area)
-            apartment.rooms = request.POST.get("rooms", apartment.rooms)
-            apartment.type = request.POST.get("type", apartment.type)
-            apartment.price = request.POST.get("price", apartment.price)
-
-            apartment.save()
-
-            return JsonResponse({"message": "Квартира успешно обновлена", "apartment_id": apartment.id})
+        apartment_id = request.POST.get("apartment-id")
+        if not apartment_id:
+            return JsonResponse({"error": "Не указан ID квартиры"}, status=400)
+        apartment = get_object_or_404(Apartment, id=apartment_id)
+        # Обновляем данные из формы
+        apartment.number = request.POST.get("number", apartment.number)
+        apartment.window_orientation = request.POST.get("window-orientation", apartment.window_orientation)
+        apartment.area = request.POST.get("area", apartment.area)
+        apartment.rooms = request.POST.get("rooms", apartment.rooms)
+        apartment.type = request.POST.get("type", apartment.type)
+        apartment.price = request.POST.get("price", apartment.price)
+        apartment.save()
+        return JsonResponse({"message": "Квартира успешно обновлена", "apartment_id": apartment.id})
 """ class ApartmentUpdateView(View):
     def post(self, request):
         print(request.POST)
