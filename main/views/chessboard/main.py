@@ -10,7 +10,8 @@ from django.views.generic import CreateView, UpdateView, ListView
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
-from main.forms import ApartmentForm
+from main.forms import ApartmentForm, ApartmentCreateForm
+from django.urls import reverse
 """ class ResidentialComplex(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -118,42 +119,36 @@ class BuildingDetailView(ListView, BaseView):
         }
         return render(request, 'chessboard/building_detail.html', context)
 
+class ApartmentCreateView(CreateView):
+    model = Apartment
+    form_class = ApartmentCreateForm
 
-class ApartmentCreateView(ListView, BaseView):
-    def post(self, request):
-        apartment_id = request.POST.get("apartment-id")
-        if not apartment_id:
-            return JsonResponse({"error": "Не указан ID квартиры"}, status=400)
-        apartment = get_object_or_404(Apartment, id=apartment_id)
-        # Обновляем данные из формы
-        apartment.number = request.POST.get("number", apartment.number)
-        apartment.window_orientation = request.POST.get("window-orientation", apartment.window_orientation)
-        apartment.area = request.POST.get("area", apartment.area)
-        apartment.rooms = request.POST.get("rooms", apartment.rooms)
-        apartment.type = request.POST.get("type", apartment.type)
-        apartment.price = request.POST.get("price", apartment.price)
-        apartment.save()
-        return JsonResponse({"message": "Квартира успешно обновлена", "apartment_id": apartment.id})
-""" class ApartmentUpdateView(View):
-    def post(self, request):
-        print(request.POST)
-        apartment_id = request.POST.get("apartment-id")
-        if not apartment_id:
-            return JsonResponse({"error": "Не указан ID квартиры"}, status=400)
+    """ pk_url_kwarg = 'building_id' """
+    template_name = 'chessboard/building_detail.html'
+    #success_url = reverse_lazy('main:building_detail')  # Измени на нужную страницу
+    success_message = "Квартира успешно создана"
 
-        apartment = get_object_or_404(Apartment, id=apartment_id)
+   
 
-        # Обновляем данные из формы
-        apartment.number = request.POST.get("number", apartment.number)
-        apartment.window_orientation = request.POST.get("window-orientation", apartment.window_orientation)
-        apartment.area = request.POST.get("area", apartment.area)
-        apartment.rooms = request.POST.get("rooms", apartment.rooms)
-        apartment.type = request.POST.get("type", apartment.type)
-        apartment.price = request.POST.get("price", apartment.price)
+    def form_valid(self, form):
+        """Добавляем building_id и сохраняем квартиру"""
+        form.instance.building = get_object_or_404(Building, id=self.kwargs.get("building_id"))
+        return super().form_valid(form)
 
-        apartment.save()
-
-        return JsonResponse({"message": "Квартира успешно обновлена", "apartment_id": apartment.id}) """
+    def get_context_data(self, **kwargs):
+        """Передаём building_id в контекст"""
+        context = super().get_context_data(**kwargs)
+        context["building_id"] = self.kwargs.get("building_id")
+        return context
+        context = super().get_context_data(**kwargs)
+        context["building_id"] = self.kwargs.get("building_id")
+        context["floor"] = self.kwargs.get("floor")
+        context["col"] = self.kwargs.get("col")
+        context["str"] = self.kwargs.get("str")
+        return context
+    def get_success_url(self):
+        """После успешного создания перенаправляем на building_detail с нужным ID"""
+        return reverse("main:building_detail", kwargs={"building_id": self.kwargs.get("building_id")})
 
 class ApartmentUpdateView(SuccessMessageMixin, UpdateView):
     model = Apartment
@@ -165,21 +160,15 @@ class ApartmentUpdateView(SuccessMessageMixin, UpdateView):
 
 
     def post(self, request, apartment_id, *args, **kwargs):  # Добавляем apartment_id
-        print(f"Received apartment_id: {apartment_id}")  # Проверяем, что приходит
         apartment = get_object_or_404(Apartment, id=apartment_id)
         
         form = ApartmentForm(request.POST, instance=apartment)
+        print(form)
         if form.is_valid():
             form.save()
             return JsonResponse({"message": "Квартира успешно обновлена"})
         else:
             return JsonResponse({"error": form.errors}, status=400)
-    """ def dispatch(self, request, *args, **kwargs):
-        print(kwargs)
-        print(args)
-        if not request.user.is_staff:
-            raise PermissionDenied()
-        return super().dispatch(request, *args, **kwargs) """
 
     def form_valid(self, form):
         response = super().form_valid(form)

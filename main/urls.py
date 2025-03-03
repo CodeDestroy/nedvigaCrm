@@ -329,13 +329,17 @@ urlpatterns = [
         path('complex/<int:complex_id>/', views.ResidentialComplexDetailView.as_view(), name='residential_complex_detail'),
         path('building/', include([
             path('create/', views.BuildingCreateView.as_view(), name='building_create'),
-            path('<int:building_id>/', views.BuildingDetailView.as_view(), name='building_detail'),
+            #path('<int:building_id>/', views.BuildingDetailView.as_view(), name='building_detail'),
+            path('<int:building_id>/', include([
+                path('', views.BuildingDetailView.as_view(), name='building_detail'),
+                path('apartment/', include([
+                    path('create/', views.ApartmentCreateView.as_view(), name='apartment_create'),
+                    path('<int:apartment_id>/update/', views.ApartmentUpdateView.as_view(), name='apartment_update'),
+                ]))
+            ])),
             path('<int:building_id>/update/', views.BuildingUpdateView.as_view(), name='building_update'),
         ])),
-        path('apartment/', include([
-            path('create/', views.ApartmentCreateView.as_view(), name='apartment_create'),
-            path('<int:apartment_id>/update/', views.ApartmentUpdateView.as_view(), name='apartment_update'),
-        ]))
+        
     
     ])),
 ]
