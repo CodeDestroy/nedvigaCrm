@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ('apartment_type', models.CharField(max_length=255)),
                 ('area', models.FloatField()),
                 ('price', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('status', models.CharField(choices=[('available', 'В продаже'), ('sold', 'Продана')], default='available', max_length=10)),
+                ('status', models.CharField(choices=[('available', 'Свободно'), ('reserved', 'Платная бронь'), ('shortReserved', 'Короткая бронь'), ('sold', 'Продана')], default='available', max_length=15)),
                 ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(class)s_created_items', to=settings.AUTH_USER_MODEL, verbose_name='Кто создал')),
                 ('updated_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(class)s_updated_items', to=settings.AUTH_USER_MODEL, verbose_name='Кто обновил')),
                 ('building', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='apartments', to='main.building')),
