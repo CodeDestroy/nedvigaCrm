@@ -36,6 +36,7 @@ class Building(CreatedUpdatedMixin):
 class Apartment(CreatedUpdatedMixin):
     STATUS_CHOICES = [
         ('available', 'В продаже'),
+        ('reserved', 'Зарезервирована'),
         ('sold', 'Продана')
     ]
     

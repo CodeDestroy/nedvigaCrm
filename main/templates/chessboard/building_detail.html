@@ -33,8 +33,14 @@
         align-items: center;
     }
 
-</style>
+    .modal-backdrop {
+        display: none !important;
+    }
 
+</style>
+<button type="button" id="create-modal-btn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#apartment-modal-create">
+    <i class="ti ti-plus icon"></i>Добавить квартиру
+</button>
 <div class="card">
     <div class="card-body">
         <h1>Дом: {{ building.name }}</h1>
@@ -70,6 +76,7 @@
                                                             data-rooms="{{ apartment.rooms }}"
                                                             data-apartment-type="{{ apartment.apartment_type }}"
                                                             data-price="{{ apartment.price }}"
+                                                            data-status="{{ apartment.status }}"
                                                         >
                                                             №{{ apartment.number }}
                                                         </a>
@@ -83,6 +90,7 @@
                                                             data-rooms="{{ apartment.rooms }}"
                                                             data-apartment-type="{{ apartment.apartment_type }}"
                                                             data-price="{{ apartment.price }}"
+                                                            data-status="{{ apartment.status }}"
                                                         >
                                                             {{ apartment.window_orientation }}
                                                         </a>
@@ -96,6 +104,7 @@
                                                             data-rooms="{{ apartment.rooms }}"
                                                             data-apartment-type="{{ apartment.apartment_type }}"
                                                             data-price="{{ apartment.price }}"
+                                                            data-status="{{ apartment.status }}"
                                                         >
                                                             {{ apartment.area }} м²
                                                         </a>
@@ -111,6 +120,7 @@
                                                             data-rooms="{{ apartment.rooms }}"
                                                             data-apartment-type="{{ apartment.apartment_type }}"
                                                             data-price="{{ apartment.price }}"
+                                                            data-status="{{ apartment.status }}"
                                                         >
                                                             {{ apartment.rooms }}к
                                                         </a>
@@ -124,6 +134,7 @@
                                                             data-rooms="{{ apartment.rooms }}"
                                                             data-apartment-type="{{ apartment.apartment_type }}"
                                                             data-price="{{ apartment.price }}"
+                                                            data-status="{{ apartment.status }}"
                                                         >
                                                             {{ apartment.apartment_type }}
                                                         </a>
@@ -137,6 +148,7 @@
                                                             data-rooms="{{ apartment.rooms }}"
                                                             data-apartment-type="{{ apartment.apartment_type }}"
                                                             data-price="{{ apartment.price }}"
+                                                            data-status="{{ apartment.status }}"
                                                         >
                                                             {{ apartment.price }}
                                                         </a>
@@ -159,7 +171,8 @@
     <form method="post" class="modal-content" id="apartment-form">
         {% csrf_token %}
         {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-        <input type="hidden" name="apartment-id" id="apartment-id" value="-1">
+        <input type="hidden" name="building_id" value="{{ building.id }}">
+        <input type="hidden" name="apartment_id" id="apartment-id" value="-1">
         <div class="modal-header px-0">
             <h5 class="modal-title" id="modalLabel">Детали квартиры</h5>
             <button type="button" class="modal-close btn-close" id="modal-close-top" style="margin-right: 0; margin-left: auto;" data-bs-dismiss="modal" aria-label="Close">&times;</button>
@@ -171,23 +184,31 @@
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text min-w-25" for="id_surname">Вид</label>
-                <input type="text" name="window-orientation" class="form-control" maxlength="100" id="modal-apartment-window-orientation">
+                <input type="text" name="window_orientation" class="form-control" maxlength="100" id="modal-apartment-window-orientation">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text min-w-25" for="id_surname">Площадь</label>
-                <input type="text" name="area" class="form-control" maxlength="100" id="modal-apartment-area">
+                <input type="number" name="area" class="form-control" maxlength="100" id="modal-apartment-area">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text min-w-25" for="id_surname">Комнаты</label>
-                <input type="text" name="rooms" class="form-control" maxlength="100" id="modal-apartment-rooms">
+                <input type="number" name="rooms" class="form-control" maxlength="100" id="modal-apartment-rooms">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text min-w-25" for="id_surname">Тип</label>
-                <input type="text" name="type" class="form-control" maxlength="100" id="modal-apartment-type">
+                <input type="text" name="apartment_type" class="form-control" maxlength="100" id="modal-apartment-type">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text min-w-25" for="id_surname">Цена</label>
-                <input type="text" name="price" class="form-control" maxlength="100" id="modal-apartment-price">
+                <input type="number" name="price" class="form-control" maxlength="100" id="modal-apartment-price">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text min-w-25">Статус</label>
+                <select name="status" class="form-control" id="modal-apartment-status" required>
+                    <option value="available">В продаже</option>
+                    <option value="reserved">Зарезервирована</option>
+                    <option value="sold">Продана</option>
+                </select>
             </div>
             
         </div>
@@ -197,18 +218,84 @@
         </div>
     </form>
 </div>
+<div class="modal" id="apartment-modal-create" tabindex="-1" aria-labelledby="apartmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="position: static;">
+        <div class="modal-content">
+            <form method="post" id="apartment-form">
+                {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                <input type="hidden" name="building_id" value="{{ building.id }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="apartmentModalLabel">Добавить квартиру</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Номер</label>
+                        <input type="text" name="number" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Вид</label>
+                        <input type="text" name="window_orientation" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Площадь</label>
+                        <input type="number" name="area" class="form-control" min="0" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Комнаты</label>
+                        <input type="number" name="rooms" class="form-control" min="0" step="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Тип</label>
+                        <input type="text" name="apartment_type" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Цена</label>
+                        <input type="number" name="price" class="form-control" min="0" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Статус</label>
+                        <select name="status" class="form-control" required>
+                            <option value="available">В продаже</option>
+                            <option value="reserved">Зарезервирована</option>
+                            <option value="sold">Продана</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">STR</label>
+                        <input type="number" name="str" class="form-control" min="0" step="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Floor</label>
+                        <input type="number" name="floor" class="form-control" min="0" step="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">COL</label>
+                        <input type="number" name="col" class="form-control" min="0" step="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">section</label>
+                        <input type="number" name="section" class="form-control" min="0" step="1" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 <script>
-
-    document.querySelector("#apartment-modal form").addEventListener("submit", function (event) {
+    document.querySelector('#apartment-modal-create').addEventListener("submit", function(event) {
         event.preventDefault();
-        
         const form = event.target;
         const formData = new FormData(form);
-        const apartmentId = formData.get("apartment-id");
-
-        fetch(`/chess/apartment/${apartmentId}/update/`, {  // Слеш в конце!
+        const buildingId = formData.get("building_id");
+        fetch(`/chess/building/${buildingId}/apartment/create/`, {  // Слеш в конце!
             method: "POST",
             headers: {
                 "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
@@ -218,7 +305,33 @@
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                alert(data.message);
+                /* alert(data.message); */
+                location.reload();  // Обновляем страницу
+            } else {
+                alert("Ошибка: " + (data.error || "Неизвестная ошибка"));
+            }
+        })
+        .catch(error => console.error("Ошибка:", error));
+    })
+    document.querySelector("#apartment-modal form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+        const apartmentId = formData.get("apartment_id");
+        const buildingId = formData.get("building_id");
+
+        fetch(`/chess/building/${buildingId}/apartment/${apartmentId}/update/`, {  // Слеш в конце!
+            method: "POST",
+            headers: {
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                /* alert(data.message); */
                 location.reload();  // Обновляем страницу
             } else {
                 alert("Ошибка: " + (data.error || "Неизвестная ошибка"));
@@ -235,62 +348,43 @@
         const modalRooms = document.getElementById("modal-apartment-rooms");
         const modalType = document.getElementById("modal-apartment-type");
         const modalPrice = document.getElementById("modal-apartment-price");
+        const modalStatus = document.getElementById("modal-apartment-status");
         const closeModalButton = document.getElementById("modal-close-top");
         const closeModalButton2 = document.getElementById("modal-close-bottom");
         const form = document.getElementById("apartment-form");
+        let modalCreate = new bootstrap.Modal(document.getElementById("apartment-modal-create"));
 
+        document.querySelector("#create-modal-btn").addEventListener("click", function () {
+            modalCreate.show();
+        });
         document.querySelectorAll(".apartment-link").forEach(link => {
             link.addEventListener("click", function(event) {
                 event.preventDefault();
-                console.log(this.dataset)
+                this.dataset.price = this.dataset.price.replace(/\s+/g, '');
                 // Заполняем модальное окно данными
                 modalId.value = this.dataset.id;
                 modalNumber.value = this.dataset.number;
                 modalWindowOrientation.value = this.dataset.windowOrientation;
-                modalArea.value = this.dataset.area;
-                modalRooms.value = this.dataset.rooms;
+                
+                
+                modalArea.value = parseFloat(this.dataset.area);
+                /* console.log(modalRooms.value) */
+                modalRooms.value = parseInt(this.dataset.rooms);
                 modalType.value = this.dataset.apartmentType;
-                modalPrice.value = this.dataset.price;
+                /* console.log(modalPrice.value) */
+                modalPrice.value = parseFloat(this.dataset.price);
+                modalStatus.value = this.dataset.status;
                 // Показываем модальное окно
                 modal.style.display = "block";
             });
         });
 
-        /* form.addEventListener("submit", function (event) {
-            console.log("Отправка формы")
-            event.preventDefault();
-            const formData = new FormData(form);
-
-            fetch('/chess/apartment/' + formData.get("apartment-id") + '/update/', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",  // Передача FormData
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                },
-                body: new URLSearchParams(formData)
-                
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                    modal.style.display = "none";
-                    location.reload();  // Обновление страницы
-                } else {
-                    alert("Ошибка: " + (data.error || "Неизвестная ошибка"));
-                }
-            })
-            .catch(error => console.error("Ошибка:", error));
-        }); */
-
         // Закрытие окна при клике на кнопку
         closeModalButton.addEventListener("click", function() {
-            console.log(this)
             modal.style.display = "none";
         });
 
         closeModalButton2.addEventListener("click", function() {
-            console.log(this)
             modal.style.display = "none";
         });
         // Закрытие окна при клике вне контента
