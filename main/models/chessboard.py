@@ -8,7 +8,8 @@ class Complex(CreatedUpdatedMixin):
     name = models.CharField(max_length=255)
     description = models.TextField()
     """ image = models.ImageField(upload_to='complex_images/', null=True, blank=True) """
-
+    def total_apartments(self):
+        return Apartment.objects.filter(building__complex=self).count()
     def __str__(self):
         return self.name
     

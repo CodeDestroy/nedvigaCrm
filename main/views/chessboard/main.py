@@ -10,48 +10,32 @@ from django.views.generic import CreateView, UpdateView, ListView
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
-from main.forms import ApartmentForm, ApartmentCreateForm
+from main.forms import ApartmentForm, ApartmentCreateForm, BuildingCreateForm, ComplexCreateForm
 from django.urls import reverse
-""" class ResidentialComplex(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
 
-    def __str__(self):
-        return self.name
-
-class Building(models.Model):
-    complex = models.ForeignKey(ResidentialComplex, on_delete=models.CASCADE, related_name='buildings')
-    name = models.CharField(max_length=255)
-    total_floors = models.IntegerField()
-    total_apartments = models.IntegerField()
-
-    def __str__(self):
-        return f"{self.complex.name} - {self.name}"
-
-class Apartment(models.Model):
-    STATUS_CHOICES = [
-        ('available', 'В продаже'),
-        ('sold', 'Продана')
-    ]
-    
-    building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name='apartments')
-    floor = models.IntegerField()
-    number = models.CharField(max_length=10)
-    rooms = models.IntegerField()
-    window_orientation = models.CharField(max_length=255)
-    apartment_type = models.CharField(max_length=255)
-    area = models.FloatField()
-    price = models.DecimalField(max_digits=12, decimal_places=2)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='available')
-
-    def __str__(self):
-        return f"Квартира {self.number} - {self.building.name}"
- """
-# Представления
 class ResidentialComplexListView(ListView, BaseView):
     def get(self, request):
         complexes = Complex.objects.all()
         return render(request, 'chessboard/residential_complex_list.html', {'complexes': complexes})
+class ResidentialComplexCreateView(CreateView):
+    model = Complex
+    form_class = ComplexCreateForm
+    template_name = "chessboard/residential_complex_list.html"
+    success_url = reverse_lazy('main:residential_complex_list')
+    success_message = "Жилой комплекс успешно создан"
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            raise PermissionDenied()
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        complex_instance = form.save(commit=False)
+        complex_instance.created_by = self.request.user
+        complex_instance.updated_by = self.request.user
+        complex_instance.save()
+        return super().form_valid(form)
+
 
 class ResidentialComplexDetailView(ListView, BaseView):
     def get(self, request, complex_id):
@@ -63,12 +47,23 @@ class ResidentialComplexDetailView(ListView, BaseView):
             'buildings': buildings
         }
         return render(request, 'chessboard/residential_complex_detail.html', context)
+class BuildingCreateView(CreateView):
+    model = Building
+    form_class = BuildingCreateForm
+    template_name = "chessboard/residential_complex_detail.html"
+    success_message = "Дом успешно создан"
 
-class BuildingCreateView(ListView, BaseView):
-    def dispatch(self, request, *args, **kwargs):
-        """ if not request.user.is_staff:
-            raise PermissionDenied() """
-        return super().dispatch(request, args, kwargs)
+    def form_valid(self, form):
+        """Добавляем complex_id и сохраняем дом"""
+        complex_id = self.request.POST.get("complex_id")
+        form.instance.complex = get_object_or_404(Complex, id=complex_id)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """Перенаправляем на страницу комплекса после создания дома"""
+        return reverse("main:residential_complex_detail", kwargs={"complex_id": self.object.complex.id})
+
+
 
 class BuildingUpdateView(SuccessMessageMixin, UpdateView, BaseView):
     """ model = MessageTemplate
@@ -136,12 +131,6 @@ class ApartmentCreateView(CreateView):
         """Передаём building_id в контекст"""
         context = super().get_context_data(**kwargs)
         context["building_id"] = self.kwargs.get("building_id")
-        return context
-        context = super().get_context_data(**kwargs)
-        context["building_id"] = self.kwargs.get("building_id")
-        context["floor"] = self.kwargs.get("floor")
-        context["col"] = self.kwargs.get("col")
-        context["str"] = self.kwargs.get("str")
         return context
     def get_success_url(self):
         """После успешного создания перенаправляем на building_detail с нужным ID"""

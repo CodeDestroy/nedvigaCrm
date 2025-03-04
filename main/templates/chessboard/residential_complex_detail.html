@@ -1,6 +1,9 @@
 {% extends 'base_view.html' %}
 {% load tools %}
 {% block container %}
+<button type="button" id="create-modal-btn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#building-modal-create">
+    <i class="ti ti-plus icon"></i>Добавить дом
+</button>
 <form class="card" method="post" action="#">{% csrf_token %}
     <div class="card-body">
         <h1>Дома в {{ complex.name }}</h1>
@@ -43,4 +46,40 @@
     </div>
     {% include 'base_pagination.html' %}
 </form>
+<div class="modal" id="building-modal-create" tabindex="-1" aria-labelledby="BuidlingModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="position: static;">
+        <div class="modal-content" style="width: 35rem; max-height: 80vh; overflow-y: auto;">
+            <form method="post" action="/chess/building/create/" id="building-form">
+                {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                <input type="hidden" name="complex_id" value="{{ complex.id }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="buildingModalLabel">Добавить дом</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="mb-3 col">
+                            <label class="form-label">Номер</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col">
+                            <label class="form-label">Кол-во этажей</label>
+                            <input type="number" name="total_floors" class="form-control" min="0" step="1" required>
+                        </div>
+                        
+                    </div>
+                    <div class="mb-3 ">
+                        <label class="form-label">Кол-во квартир</label>
+                        <input type="number" name="total_apartments" class="form-control" min="0" step="1" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

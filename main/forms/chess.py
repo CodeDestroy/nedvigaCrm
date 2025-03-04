@@ -60,3 +60,22 @@ class ApartmentCreateForm(BaseModelForm):
             #status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='available')
             #section = models.IntegerField(null=True, default=1)
         }
+class BuildingCreateForm(BaseModelForm):
+    class Meta:
+        model = Building
+        fields = ('name', 'total_floors', 'total_apartments')  # Поля для редактирования
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'total_floors': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 1}),  
+            'total_apartments': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 1}),
+        }
+class ComplexCreateForm(BaseModelForm):
+    class Meta:
+        model = Complex
+        fields = ('name', 'description')  # Поля для редактирования
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),  
+        }
