@@ -65,10 +65,20 @@
                                 {% if columns|get_item:col %}
                                     {% for apartment in columns|get_item:col %}
                                         {% if apartment.section == section %}
-                                            <table class="table-bordered m-auto" >
+                                            {% if apartment.status == 'sold' %}
+                                            <table class="table-bordered m-auto bg-red" >
+                                            {%elif apartment.status == 'reserved' %}
+                                            
+                                            <table class="table-bordered m-auto bg-purple" >
+                                            {%elif apartment.status == 'shortReserved' %}
+                                            
+                                            <table class="table-bordered m-auto" style="background-color: #700707;">
+                                            {% else %}
+                                            <table class="table-bordered m-auto bg-green" >
+                                            {%endif%}
                                                 <tr>
                                                     <td class="w-7 p-2">
-                                                        <a href="#" class="apartment-link" 
+                                                        <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
@@ -82,7 +92,7 @@
                                                         </a>
                                                     </td>
                                                     <td class="w-7 p-2">
-                                                        <a href="#" class="apartment-link"
+                                                        <a href="#" class="apartment-link text-white"
                                                             data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
@@ -96,7 +106,7 @@
                                                         </a>
                                                     </td>
                                                     <td class="w-7 p-2">
-                                                        <a href="#" class="apartment-link" 
+                                                        <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}"
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
@@ -112,7 +122,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="w-7 p-2">
-                                                        <a href="#" class="apartment-link" 
+                                                        <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}"    
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
@@ -126,7 +136,7 @@
                                                         </a>
                                                     </td>
                                                     <td class="w-7 p-2">
-                                                        <a href="#" class="apartment-link" 
+                                                        <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
@@ -140,7 +150,7 @@
                                                         </a>
                                                     </td>
                                                     <td class="w-7 p-2">
-                                                        <a href="#" class="apartment-link" 
+                                                        <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
                                                             data-area="{{ apartment.area }}"
@@ -205,8 +215,9 @@
             <div class="input-group mb-3">
                 <label class="input-group-text min-w-25">Статус</label>
                 <select name="status" class="form-control" id="modal-apartment-status" required>
-                    <option value="available">В продаже</option>
-                    <option value="reserved">Зарезервирована</option>
+                    <option value="available">Свободно</option>
+                    <option value="reserved">Платная бронь</option>
+                    <option value="shortReserved">Короткая бронь</option>
                     <option value="sold">Продана</option>
                 </select>
             </div>
@@ -257,8 +268,9 @@
                     <div class="mb-3">
                         <label class="form-label">Статус</label>
                         <select name="status" class="form-control" required>
-                            <option value="available">В продаже</option>
-                            <option value="reserved">Зарезервирована</option>
+                            <option value="available">Свободно</option>
+                            <option value="reserved">Платная бронь</option>
+                            <option value="shortReserved">Короткая бронь</option>
                             <option value="sold">Продана</option>
                         </select>
                     </div>

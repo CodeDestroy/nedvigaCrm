@@ -35,8 +35,9 @@ class Building(CreatedUpdatedMixin):
 
 class Apartment(CreatedUpdatedMixin):
     STATUS_CHOICES = [
-        ('available', 'В продаже'),
-        ('reserved', 'Зарезервирована'),
+        ('available', 'Свободно'),
+        ('reserved', 'Платная бронь'),
+        ('shortReserved', 'Короткая бронь'),
         ('sold', 'Продана')
     ]
     
@@ -50,7 +51,7 @@ class Apartment(CreatedUpdatedMixin):
     apartment_type = models.CharField(max_length=255)
     area = models.FloatField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='available')
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='available')
     section = models.IntegerField(null=True, default=1)
     def __str__(self):
         return f"Квартира {self.number} - {self.building.name}"

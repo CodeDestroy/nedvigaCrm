@@ -80,9 +80,6 @@ class BuildingUpdateView(SuccessMessageMixin, UpdateView, BaseView):
     success_message = 'Шаблон сообщения успешно обновлен' """
 
     def dispatch(self, request, *args, **kwargs):
-        print(request)
-        print(*args)
-        print(**kwargs)
         """ if not request.user.is_staff:
             raise PermissionDenied() """
         return super().dispatch(request, args, kwargs)
@@ -163,7 +160,6 @@ class ApartmentUpdateView(SuccessMessageMixin, UpdateView):
         apartment = get_object_or_404(Apartment, id=apartment_id)
         
         form = ApartmentForm(request.POST, instance=apartment)
-        print(form)
         if form.is_valid():
             form.save()
             return JsonResponse({"message": "Квартира успешно обновлена"})
