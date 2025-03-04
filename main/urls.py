@@ -326,6 +326,7 @@ urlpatterns = [
     ])),
     path('chess/', include([
         path('', views.ResidentialComplexListView.as_view(), name='residential_complex_list'),
+        path('complex/create/', views.ResidentialComplexCreateView.as_view(), name='residential_complex_create'),
         path('complex/<int:complex_id>/', views.ResidentialComplexDetailView.as_view(), name='residential_complex_detail'),
         path('building/', include([
             path('create/', views.BuildingCreateView.as_view(), name='building_create'),
