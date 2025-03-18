@@ -1,0 +1,29 @@
+<Ads formatVersion="3" target="Avito.ru">{% for apartment in apartments %}{% if apartment.apartmentphoto_set.all and apartment.building.total_floors %}<Ad>
+<Id>{{ apartment.pk|stringformat:'i' }}</Id>
+<Category>Квартиры</Category>
+<MarketType>Новостройка</MarketType>
+<OperationType>Продам</OperationType>
+<Status>Квартира</Status>
+<DealType>Прямая продажа</DealType>
+<SaleOptions>Можно в ипотеку</SaleOptions>
+<PropertyRights>Застройщик</PropertyRights>
+<ContactMethod>По телефону и в сообщениях</ContactMethod>
+<Price>{{ apartment.price|stringformat:'.2f' }}</Price>
+<Images>{% for img in apartment.apartmentphoto_set.all %}<Image url="https://crm.xn--36-6kch5aj8bbq6g.xn--p1ai/{{ img.photo.url }}"></Image>{% endfor %}</Images>
+<Rooms>{{ apartment.rooms }}</Rooms>
+<Square>{{ apartment.area }}</Square>
+<!-- living_space -->
+{% if apartment.area %}<LivingSpace>{{ apartment.area }}</LivingSpace>{% endif %}
+{% if apartment.kitchen_space %}<KitchenSpace>{{ apartment.kitchen_space }}</KitchenSpace>{% endif %}
+<Floor>{{ apartment.floor }}</Floor>
+<Floors>{{ apartment.building.total_floors }}</Floors>
+<!-- {% if type == 'domclick' %}
+<Address>{% if apartment.obj.region %}{{ apartment.obj.region }}{% elif apartment.obj.parent and apartment.obj.parent.region %}{{ apartment.obj.parent.region }}{% endif %}, {% if apartment.obj.city %}{{ apartment.obj.city }}{% elif apartment.obj.parent and apartment.obj.parent.city %}{{ apartment.obj.parent.city }}{% endif %}, {% if apartment.obj.address %}{{ apartment.obj.address }}{% elif apartment.obj.parent %}{{ apartment.obj.parent.address }}{% endif %}</Address>
+<apartmentNumber>{{ apartment.apartment_number }}</apartmentNumber>
+{% else %} --><ApartmentNumber>{{ apartment.number }}</ApartmentNumber>{% endif %}
+<Description><![CDATA[{{ apartment.get_alternative_description|safe }}]]></Description>
+{% if apartment.kitchen_square %}<KitchenSpace>{{ apartment.kitchen_square }}</KitchenSpace>{% endif %}
+<Decoration>{{ apartment.decoration }}</Decoration>
+<HouseType>{{ apartment.building.material }}</HouseType>
+<NewDevelopmentId>{{ apartment.building.avito_id|stringformat:'i' }}</NewDevelopmentId>
+</Ad>{% endif %}{% endfor %}</Ads>

@@ -1,0 +1,127 @@
+{% extends 'base_view.html' %}
+{% load static %}
+{% block container %}
+<div class="row">
+    <div class="col-12 col-lg-5 mb-3 mb-lg-0">
+        <form class="card" action="{% url 'main:apartment_detail_update' building_id=apartment.building.pk apartment_id=apartment.pk %}" method="post">
+            <div class="card-body">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.number.id_for_label }}">{{ form.number.label }}</label>
+                        {{ form.number }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.window_orientation.id_for_label }}">{{ form.window_orientation.label }}</label>
+                        {{ form.window_orientation }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.area.id_for_label }}">{{ form.area.label }}</label>
+                        {{ form.area }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.rooms.id_for_label }}">{{ form.rooms.label }}</label>
+                        {{ form.rooms }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.apartment_type.id_for_label }}">{{ form.apartment_type.label }}</label>
+                        {{ form.apartment_type }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.price.id_for_label }}">{{ form.price.label }}</label>
+                        {{ form.price }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+                        {{ form.status }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        {{ form.terrace }}
+                        <label class="form-check-label" for="{{ form.terrace.auto_id }}">{{ form.terrace.label }}</label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.kitchen_space.id_for_label }}">{{ form.kitchen_space.label }}</label>
+                        {{ form.kitchen_space }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.decoration.id_for_label }}">{{ form.decoration.label }}</label>
+                        {{ form.decoration }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                        {{ form.description }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        {{ form.published }}
+                        <label class="form-check-label" for="{{ form.published.auto_id }}">{{ form.published.label }}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-12 col-lg-5 mb-3 mb-lg-0">
+        <h3>Фотографии квартиры</h3>
+        <div class="photo-gallery">
+            {% for photo in photos %}
+                <img src="{{ photo.photo.url }}" alt="Фото квартиры" class="apartment-photo">
+            {% empty %}
+                <p>Нет загруженных фотографий</p>
+            {% endfor %}
+        </div>
+
+        <!-- Форма загрузки фото -->
+        <form id="photo-upload-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ photo_upload_form.as_p }}
+            <button type="submit">Загрузить фото</button>
+        </form>
+    </div>
+
+</div>
+
+<!-- AJAX-загрузка фото -->
+<script>
+    document.getElementById('photo-upload-form').onsubmit = async function(e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+
+        let response = await fetch("{% url 'main:apartment_photo_upload' building_id=apartment.building.pk apartment_id=apartment.pk %}", {
+            method: "POST",
+            body: formData,
+            headers: {'X-CSRFToken': '{{ csrf_token }}'}
+        });
+
+        if (response.ok) {
+            location.reload();  // Перезагрузить страницу для отображения фото
+        } else {
+            
+            alert("Ошибка загрузки фото");
+        }
+    }
+</script>
+{% endblock %}

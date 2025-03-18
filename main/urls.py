@@ -4,11 +4,12 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView,
 from django.urls import path, include, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import RedirectView
-
+from django.conf.urls.static import static
 from . import views
 from .forms import CustomAuthenticationForm, CustomPasswordChangeForm, CustomPasswordResetForm, CustomSetPasswordForm
 from .forms.site import *
 
+from django.views.generic import TemplateView
 app_name = 'main'
 
 urlpatterns = [
@@ -324,18 +325,33 @@ urlpatterns = [
                 template_name='custom_registration/password_reset_complete.html'), name='password_reset_complete'),
         ])),
     ])),
+    path('test/', TemplateView.as_view(
+        template_name='test.html', extra_context={'title': 'Политика конфиденциальности', 'url': reverse_lazy('main:test')}
+    ), name='test'),
+    #path('/feeds/<int:building_id>/', views.FeedListView.as_view(), name='feed-list
+    path('feeds/', include([
+        path('avito/', views.AvitoFeed.as_view(), name='avito-feed'),
+        path('avito-new/', views.NewAvitoFeed.as_view(), name='avito-feed'),
+    ])),
     path('chess/', include([
         path('', views.ResidentialComplexListView.as_view(), name='residential_complex_list'),
         path('complex/create/', views.ResidentialComplexCreateView.as_view(), name='residential_complex_create'),
-        path('complex/<int:complex_id>/', views.ResidentialComplexDetailView.as_view(), name='residential_complex_detail'),
+        path('complex/<int:complex_id>/', views.BuildingListView.as_view(), name='building_list'),
+        
         path('building/', include([
             path('create/', views.BuildingCreateView.as_view(), name='building_create'),
             #path('<int:building_id>/', views.BuildingDetailView.as_view(), name='building_detail'),
             path('<int:building_id>/', include([
-                path('', views.BuildingDetailView.as_view(), name='building_detail'),
+                path('', views.ApartmentListView.as_view(), name='apartment_list'),
                 path('apartment/', include([
+                    
+                    path('<int:apartment_id>/', include([
+                        path('', views.ApartmentDetailView.as_view(), name='apartment_detail'),
+                        path('upload-photo/', views.ApartmentPhotoUploadView.as_view(), name='apartment_photo_upload'),
+                    ])) ,
                     path('create/', views.ApartmentCreateView.as_view(), name='apartment_create'),
                     path('<int:apartment_id>/update/', views.ApartmentUpdateView.as_view(), name='apartment_update'),
+                    path('<int:apartment_id>/update-detail/', views.ApartmentDetailUpdateView.as_view(), name='apartment_detail_update'),
                 ]))
             ])),
             path('<int:building_id>/update/', views.BuildingUpdateView.as_view(), name='building_update'),
@@ -344,3 +360,5 @@ urlpatterns = [
     
     ])),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

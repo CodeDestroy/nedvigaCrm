@@ -20,3 +20,4 @@ from .task import *
 from .user import *
 from .whatsapp import *
 from .chessboard import *
+from .feeds import *
