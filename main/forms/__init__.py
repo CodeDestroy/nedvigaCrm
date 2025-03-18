@@ -19,10 +19,11 @@ from .task import TaskForm
 from .questions import QuestionsForm
 from .user import UserForm, UserUpdateForm
 from .chess import *
-
+from .apartment_photo import ApartmentPhotoForm
 
 __all__ = [
     'ApartmentForm',
+    'ApartmentPhotoForm',
     'CustomAuthenticationForm',
     'CustomPasswordChangeForm',
     'CustomPasswordResetForm',

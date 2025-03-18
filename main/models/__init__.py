@@ -29,10 +29,11 @@ from .questions import Questions
 from .wantresult import Wantresult
 from .whatsapp_message import WhatsappMessage
 from .chessboard import *
+from .apartment_photo import ApartmentPhoto
 
 __all__ = [
     'CreatedUpdatedMixin',
-
+    'ApartmentPhoto',
     'AuthLog',
     'AvitoCall',
     'Bank',

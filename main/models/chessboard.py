@@ -7,6 +7,10 @@ from . import CreatedUpdatedMixin
 class Complex(CreatedUpdatedMixin):
     name = models.CharField(max_length=255)
     description = models.TextField()
+    address = models.CharField(max_length=255, null=True, blank=True)
+    region = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
+    alternative_description = models.TextField(null=True, blank=True)
     """ image = models.ImageField(upload_to='complex_images/', null=True, blank=True) """
     def total_apartments(self):
         return Apartment.objects.filter(building__complex=self).count()
@@ -24,7 +28,21 @@ class Building(CreatedUpdatedMixin):
     name = models.CharField(max_length=255)
     total_floors = models.IntegerField()
     total_apartments = models.IntegerField()
-
+    address = models.CharField(max_length=255, null=True, blank=True)
+    region = models.CharField(max_length=60, verbose_name='Регион', blank=True, null=True)
+    city = models.CharField(max_length=60, verbose_name='Город', blank=True, null=True)
+    material = models.CharField(max_length=20, verbose_name='Материал стен', choices=(
+        ('Кирпичный', 'Кирпичный'),
+        ('Панельный', 'Панельный'),
+        ('Блочный', 'Блочный'),
+        ('Монолитный', 'Монолитный'),
+        ('Монолитно-кирпичный', 'Монолитно-кирпичный')
+    ), blank=True, null=True)
+    avito_id = models.CharField(max_length=255, null=True, blank=True)
+    description = models.TextField(verbose_name='Описание', blank=True, null=True,
+                                   help_text='Если описание квартир перезаписывать не надо, то лучше оставить пустым')
+    alternative_description = models.TextField(verbose_name='Описание', blank=True, null=True,
+                                               help_text='Если описание квартир перезаписывать не надо, то лучше оставить пустым')
     def __str__(self):
         return f"{self.complex.name} - {self.name}"
     
@@ -43,20 +61,52 @@ class Apartment(CreatedUpdatedMixin):
     ]
     
     building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name='apartments')
-    floor = models.IntegerField()
-    str = models.IntegerField()
-    col = models.IntegerField()
-    number = models.CharField(max_length=10)
-    rooms = models.IntegerField()
-    window_orientation = models.CharField(max_length=255)
-    apartment_type = models.CharField(max_length=255)
-    area = models.FloatField()
-    price = models.DecimalField(max_digits=12, decimal_places=2)
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='available')
-    section = models.IntegerField(null=True, default=1)
-    def __str__(self):
-        return f"Квартира {self.number} - {self.building.name}"
+    floor = models.IntegerField(verbose_name='Этаж')
+    str = models.IntegerField(verbose_name='Строка (для шахматки, она же этаж)')
+    col = models.IntegerField(verbose_name='Колонка (для шахматки)')
+    number = models.CharField(verbose_name='Номер квартиры', max_length=10)
     
+    window_orientation = models.CharField(verbose_name='Вид из окна', max_length=255)
+    apartment_type = models.CharField(verbose_name='Тип', max_length=255)
+    area = models.FloatField(verbose_name='Площадь')
+    price = models.DecimalField(verbose_name='Цена', max_digits=12, decimal_places=2)
+    status = models.CharField(verbose_name='Статус', max_length=15, choices=STATUS_CHOICES, default='available')
+    section = models.IntegerField(verbose_name='Секция (подъезд)', null=True, default=1)
+    terrace = models.BooleanField(verbose_name='Терраса', default=False)
+
+    import_id = models.BigIntegerField(verbose_name='Import ID', default=0)
+    description = models.TextField(verbose_name='Описание', blank=True, null=True)
+    
+    kitchen_space = models.FloatField(default=0, verbose_name='Площадь кухни')
+    decoration = models.CharField(verbose_name='Отделка', choices=(
+        ('Без отделки', 'Без отделки'), ('Предчистовая', 'Предчистовая'), ('Чистовая', 'Чистовая')
+    ), default='Без отделки', max_length=13)
+    rooms = models.CharField(verbose_name='Количество комнат', default='1', choices=(
+        ('Студия', 'Студия'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'),
+        ('8', '8'), ('9', '9'), ('10 и более', '10 и более'), ('Своб.планировка', 'Своб.планировка')
+    ))
+    published = models.BooleanField(verbose_name='Публиковать в фид', default=False)
+    def __str__(self):
+        if self.rooms in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
+            return f'{self.rooms}-комнатная квартира'
+        return self.rooms
+    def get_description(self):
+        if self.description:
+            return self.description
+        elif self.building.description:
+            return self.building.description
+        elif self.building.complex and self.building.complex.description:
+            return self.building.complex.description
+        return ''
+
+
+    def get_alternative_description(self):
+        if self.building.alternative_description:
+            return self.building.alternative_description
+        elif self.building.complex and self.building.complex.alternative_description:
+            return self.building.complex.alternative_description
+        return self.description
+
     class Meta(object):
         app_label = 'main'
         db_table = 'apartments'
