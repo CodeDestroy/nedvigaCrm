@@ -336,12 +336,13 @@ urlpatterns = [
     path('chess/', include([
         path('', views.ResidentialComplexListView.as_view(), name='residential_complex_list'),
         path('complex/create/', views.ResidentialComplexCreateView.as_view(), name='residential_complex_create'),
+        path('complex/<int:complex_id>/update/', views.ResidentialComplexUpdateView.as_view(), name='residential_complex_update'),
         path('complex/<int:complex_id>/', views.BuildingListView.as_view(), name='building_list'),
         
         path('building/', include([
             path('create/', views.BuildingCreateView.as_view(), name='building_create'),
-            #path('<int:building_id>/', views.BuildingDetailView.as_view(), name='building_detail'),
             path('<int:building_id>/', include([
+                path('update/', views.BuildingUpdateView.as_view(), name='building_update'),
                 path('', views.ApartmentListView.as_view(), name='apartment_list'),
                 path('apartment/', include([
                     

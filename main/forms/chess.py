@@ -91,6 +91,23 @@ class BuildingCreateForm(BaseModelForm):
             'total_floors': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 1}),  
             'total_apartments': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 1}),
         }
+        
+class BuildingUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Building
+        fields = ('name', 'total_floors', 'total_apartments', 'address', 'region', 'city', 'material', 'description', 'alternative_description')
+        
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'total_floors': forms.NumberInput(attrs={'class': 'form-control'}),
+            'total_apartments': forms.NumberInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'region': forms.TextInput(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'material': forms.Select(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'alternative_description': forms.Textarea(attrs={'class': 'form-control'}),
+        }
 class ComplexCreateForm(BaseModelForm):
     class Meta:
         model = Complex
@@ -99,4 +116,18 @@ class ComplexCreateForm(BaseModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),  
+        }
+
+class ComplexUpdateForm(BaseModelForm):
+    class Meta:
+        model = Complex
+        fields = ('name', 'description', 'address', 'region', 'city', 'alternative_description')  # Поля для редактирования
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),  
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'region': forms.TextInput(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'alternative_description': forms.Textarea(attrs={'class': 'form-control'})
         }

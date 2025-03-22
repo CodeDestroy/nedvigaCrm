@@ -35,6 +35,9 @@
                     <a href="{% url 'main:apartment_list' building_id=building.id %}">{{ building.total_apartments }}</a>
                 </td>
                 <td class="text-center">{{ building.complex.name }}</td>
+                <td class="text-center">
+                    <a href="{% url 'main:building_update' building_id=building.id %}">Редактировать</a>
+                </td>
             </tr>
             {% empty %}
             <tr>

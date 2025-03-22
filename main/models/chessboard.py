@@ -7,10 +7,10 @@ from . import CreatedUpdatedMixin
 class Complex(CreatedUpdatedMixin):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    address = models.CharField(max_length=255, null=True, blank=True)
-    region = models.CharField(max_length=255, null=True, blank=True)
-    city = models.CharField(max_length=255, null=True, blank=True)
-    alternative_description = models.TextField(null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True, verbose_name='Адрес')
+    region = models.CharField(max_length=255, null=True, blank=True, verbose_name='Регион')
+    city = models.CharField(max_length=255, null=True, blank=True, verbose_name='Город')
+    alternative_description = models.TextField(null=True, blank=True, verbose_name='Альтернативное описание (перезаписывает всё описание)')
     """ image = models.ImageField(upload_to='complex_images/', null=True, blank=True) """
     def total_apartments(self):
         return Apartment.objects.filter(building__complex=self).count()
@@ -28,7 +28,7 @@ class Building(CreatedUpdatedMixin):
     name = models.CharField(max_length=255)
     total_floors = models.IntegerField()
     total_apartments = models.IntegerField()
-    address = models.CharField(max_length=255, null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True, verbose_name='Адрес')
     region = models.CharField(max_length=60, verbose_name='Регион', blank=True, null=True)
     city = models.CharField(max_length=60, verbose_name='Город', blank=True, null=True)
     material = models.CharField(max_length=20, verbose_name='Материал стен', choices=(

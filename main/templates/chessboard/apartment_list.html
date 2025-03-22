@@ -58,35 +58,27 @@
                 <tbody>
                     {% for floor, columns in floors.items %}
                     <tr>
-                        <td style="width: 100px;"><strong>{{ floor }} этаж</strong></td>
+                        <td style="width: 100px; padding: 0; height: 100%;"><strong>{{ floor }} этаж</strong></td>
                         
                         {% for col in column_range %}
-                            <td>
+                            <td style="width: 100px; padding: 0;">
                                 {% if columns|get_item:col %}
                                     {% for apartment in columns|get_item:col %}
                                         
                                         {% if apartment.section == section %}
                                             {% if apartment.status == 'sold' %}
-                                            <table class="table-bordered m-auto bg-red" >
+                                            <table class="table-bordered bg-red" style="width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;" >
                                             {%elif apartment.status == 'reserved' %}
                                             
-                                            <table class="table-bordered m-auto bg-purple" >
+                                            <table class="table-bordered bg-purple" style="width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;">
                                             {%elif apartment.status == 'shortReserved' %}
                                             
-                                            <table class="table-bordered m-auto" style="background-color: #700707;">
+                                            <table class="table-bordered" style="background-color: #700707; width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;">
                                             {% else %}
-                                            <table class="table-bordered m-auto bg-green" >
-                                            {%endif%}
-                                                <!-- <div class="position-relative d-inline-block">
-                                                    <a href="{% url 'main:apartment_detail' building_id=apartment.building.id apartment_id=apartment.id %}" 
-                                                        class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
-                                                        title="Редактировать">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                </div> -->
-                                                
-                                                <tr>
-                                                    <td class="w-7 p-2">
+                                            <table class="table-bordered bg-green" style="width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;" >
+                                            {%endif%}                                              
+                                                <tr style="height: max-content;">
+                                                    <td class="w-8 p-2">
                                                         <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
@@ -103,7 +95,7 @@
                                                             №{{ apartment.number }}
                                                         </a>
                                                     </td>
-                                                    <td class="w-7 p-2">
+                                                    <td class="w-8 p-2">
                                                         <a href="#" class="apartment-link text-white"
                                                             data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
@@ -120,7 +112,7 @@
                                                             {{ apartment.window_orientation }}
                                                         </a>
                                                     </td>
-                                                    <td class="w-7 p-2">
+                                                    <td class="w-8 p-2">
                                                         
                                                         <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}"
@@ -138,7 +130,7 @@
                                                             {{ apartment.area }} м²
                                                         </a>
                                                     </td>
-                                                    <td class="w-7 p-2"> 
+                                                    <td class="w-8 p-2"> 
                                                         <div class="position-relative d-inline-block">
                                                             <a href="{% url 'main:apartment_detail' building_id=apartment.building.id apartment_id=apartment.id %}" 
                                                                class="btn btn-sm btn-dark p-1"
@@ -151,7 +143,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="w-7 p-2">
+                                                    <td class="w-8 p-2">
                                                         <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}"    
                                                             data-number="{{ apartment.number }}" 
@@ -168,7 +160,7 @@
                                                             {{ apartment.rooms }}к
                                                         </a>
                                                     </td>
-                                                    <td class="w-7 p-2">
+                                                    <td class="w-8 p-2">
                                                         <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
@@ -185,7 +177,7 @@
                                                             {{ apartment.apartment_type }}
                                                         </a>
                                                     </td>
-                                                    <td class="w-7 p-2">
+                                                    <td class="w-8 p-2">
                                                         <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 
@@ -202,7 +194,7 @@
                                                             {{ apartment.price }}
                                                         </a>
                                                     </td>
-                                                    <td class="w-7 p-2">
+                                                    <td class="w-8 p-2">
                                                         <a href="#" class="apartment-link text-white" 
                                                             data-id="{{ apartment.id }}" 
                                                             data-number="{{ apartment.number }}" 

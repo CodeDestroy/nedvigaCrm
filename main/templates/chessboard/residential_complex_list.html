@@ -34,6 +34,9 @@
                     <a href="{% url 'main:building_list' complex.id %}">{{ complex.buildings.count }}</a>
                 </td>
                 <td class="text-center">{{complex.total_apartments}}</td>
+                <td class="text-center">
+                    <a href="{% url 'main:residential_complex_update' complex.id %}">Редактировать</a>
+                </td>
             </tr>
             {% empty %}
             <tr>

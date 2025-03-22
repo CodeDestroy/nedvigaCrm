@@ -10,7 +10,7 @@ from django.views.generic import CreateView, UpdateView, ListView
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
-from main.forms import ApartmentForm, ApartmentCreateForm, BuildingCreateForm, ComplexCreateForm, ApartmentPhotoForm, ApartmentDetailForm
+from main.forms import ApartmentForm, ApartmentCreateForm, BuildingCreateForm, ComplexCreateForm, ApartmentPhotoForm, ApartmentDetailForm, ComplexUpdateForm, BuildingUpdateForm
 from django.urls import reverse
 
 class ResidentialComplexListView(ListView, BaseView):
@@ -36,7 +36,25 @@ class ResidentialComplexCreateView(CreateView):
         complex_instance.save()
         return super().form_valid(form)
 
+class ResidentialComplexUpdateView (SuccessMessageMixin, UpdateView):
+    model = Complex
+    form_class = ComplexUpdateForm
+    pk_url_kwarg = 'complex_id'
+    template_name = 'chessboard/residential_complex_update.html'
+    success_message = "Жилой комплекс успешно обновлён"
+    def dispatch(self, request, *args, **kwargs):
+        complex_id = kwargs.get('complex_id')
+        complex_obj = Complex.objects.filter(id=complex_id).first()
+        #print(f"Объект Complex: {complex_obj}")
+        return super().dispatch(request, *args, **kwargs)
 
+    def get_success_url(self):
+        return reverse_lazy('main:residential_complex_update', kwargs={'complex_id': self.object.pk})  
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #print("Передаётся контекст:", context)  # Проверка, передаются ли данные
+        return context
 class BuildingListView(ListView, BaseView):
     def get(self, request, complex_id):
         complex_instance = get_object_or_404(Complex, pk=complex_id)
@@ -63,21 +81,23 @@ class BuildingCreateView(CreateView):
         """Перенаправляем на страницу комплекса после создания дома"""
         return reverse("main:building_list", kwargs={"complex_id": self.object.complex.id})
 
-
-
 class BuildingUpdateView(SuccessMessageMixin, UpdateView, BaseView):
-    """ model = MessageTemplate
-    pk_url_kwarg = 'message_id'
-    form_class = MessageTemplateForm
-    template_name = 'management/messages/form.html'
-    extra_context = {'title': 'Создание шаблона'}
-    success_url = reverse_lazy('main:management-message-list')
-    success_message = 'Шаблон сообщения успешно обновлен' """
+    model = Building
+    form_class = BuildingUpdateForm
+    pk_url_kwarg = 'building_id'
+    template_name = 'chessboard/building_update.html'
+    success_message = "Дом успешно обновлён"
 
-    def dispatch(self, request, *args, **kwargs):
-        """ if not request.user.is_staff:
-            raise PermissionDenied() """
-        return super().dispatch(request, args, kwargs)
+    def get_success_url(self):
+        return reverse_lazy('main:building_list', kwargs={'complex_id': self.object.complex.pk})
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':  
+            return JsonResponse({'message': self.success_message, 'building_id': self.object.pk})
+        
+        return redirect(self.get_success_url())  # Перенаправляем после успешного обновления
 class ApartmentListView(ListView, BaseView):
     def get(self, request, building_id):
         building_instance = get_object_or_404(Building, pk=building_id)

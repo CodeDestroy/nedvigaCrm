@@ -1,0 +1,68 @@
+{% extends 'base_view.html' %}
+
+{% block container %}
+<div class="container">
+    <h2>Редактирование дома</h2>
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+            {{ form.name.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.total_floors.label_tag }}
+            {{ form.total_floors }}
+            {{ form.total_floors.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.total_apartments.label_tag }}
+            {{ form.total_apartments }}
+            {{ form.total_apartments.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.address.label_tag }}
+            {{ form.address }}
+            {{ form.address.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.region.label_tag }}
+            {{ form.region }}
+            {{ form.region.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.city.label_tag }}
+            {{ form.city }}
+            {{ form.city.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.material.label_tag }}
+            {{ form.material }}
+            {{ form.material.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+            {{ form.description.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.alternative_description.label_tag }}
+            {{ form.alternative_description }}
+            {{ form.alternative_description.errors }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Сохранить</button>
+        <a href="{% url 'main:building_list' complex_id=object.complex.pk %}" class="btn btn-secondary">Отмена</a>
+
+    </form>
+</div>
+{% endblock %}
