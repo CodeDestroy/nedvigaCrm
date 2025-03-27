@@ -36,6 +36,7 @@
     .modal-backdrop {
         display: none !important;
     }
+    
 
 </style>
 <button type="button" id="create-modal-btn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#apartment-modal-create">
@@ -46,182 +47,185 @@
         <h1>Дом: {{ building.name }}</h1>
         {% for section in sections %}
             <h3>Секция: {{ section }}</h3>
-            <table class="table table-bordered text-center">
-                <thead>
-                    <tr>
-                        <th>Этаж \ Колонка</th>
-                        {% for col in column_range %}
-                            <th>Колонка {{ col }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for floor, columns in floors.items %}
-                    <tr>
-                        <td style="width: 100px; padding: 0; height: 100%;"><strong>{{ floor }} этаж</strong></td>
-                        
-                        {% for col in column_range %}
-                            <td style="width: 100px; padding: 0;">
-                                {% if columns|get_item:col %}
-                                    {% for apartment in columns|get_item:col %}
-                                        
-                                        {% if apartment.section == section %}
-                                            {% if apartment.status == 'sold' %}
-                                            <table class="table-bordered bg-red" style="width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;" >
-                                            {%elif apartment.status == 'reserved' %}
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>Этаж \ Колонка</th>
+                            {% for col in column_range %}
+                                <th>Колонка {{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for floor, columns in floors.items %}
+                        <tr>
+                            <td style="width: 115px; padding: 0; height: 100%;"><strong>{{ floor }} этаж</strong></td>
+                            
+                            {% for col in column_range %}
+                                <td style="width: 115px; padding: 0;">
+                                    {% if columns|get_item:col %}
+                                        {% for apartment in columns|get_item:col %}
                                             
-                                            <table class="table-bordered bg-purple" style="width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;">
-                                            {%elif apartment.status == 'shortReserved' %}
-                                            
-                                            <table class="table-bordered" style="background-color: #700707; width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;">
-                                            {% else %}
-                                            <table class="table-bordered bg-green" style="width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;" >
-                                            {%endif%}                                              
-                                                <tr style="height: max-content;">
-                                                    <td class="w-8 p-2" style="height: 80px;">
-                                                        <a href="#" class="apartment-link text-white" 
-                                                            data-id="{{ apartment.id }}" 
-                                                            data-number="{{ apartment.number }}" 
-                                                            data-area="{{ apartment.area }}"
-                                                            data-window-orientation="{{ apartment.window_orientation }}"
-                                                            data-rooms="{{ apartment.rooms }}"
-                                                            data-apartment-type="{{ apartment.apartment_type }}"
-                                                            data-price="{{ apartment.price }}"
-                                                            data-status="{{ apartment.status }}"
-                                                            data-terrace="{{ apartment.terrace }}"
-                                                            data-decoration="{{ apartment.decoration }}"
-                                                            data-kitchen-space="{{ apartment.kitchen_space }}"
-                                                        >
-                                                            №{{ apartment.number }}
-                                                        </a>
-                                                    </td>
-                                                    <td class="w-8 p-2" style="height: 80px;">
-                                                        <a href="#" class="apartment-link text-white"
-                                                            data-id="{{ apartment.id }}" 
-                                                            data-number="{{ apartment.number }}" 
-                                                            data-area="{{ apartment.area }}"
-                                                            data-window-orientation="{{ apartment.window_orientation }}"
-                                                            data-rooms="{{ apartment.rooms }}"
-                                                            data-apartment-type="{{ apartment.apartment_type }}"
-                                                            data-price="{{ apartment.price }}"
-                                                            data-status="{{ apartment.status }}"
-                                                            data-terrace="{{ apartment.terrace }}"
-                                                            data-decoration="{{ apartment.decoration }}"
-                                                            data-kitchen-space="{{ apartment.kitchen_space }}"
-                                                        >
-                                                            {{ apartment.window_orientation }}
-                                                        </a>
-                                                    </td>
-                                                    <td class="w-8 p-2" style="height: 80px;">
-                                                        
-                                                        <a href="#" class="apartment-link text-white" 
-                                                            data-id="{{ apartment.id }}"
-                                                            data-number="{{ apartment.number }}" 
-                                                            data-area="{{ apartment.area }}"
-                                                            data-window-orientation="{{ apartment.window_orientation }}"
-                                                            data-rooms="{{ apartment.rooms }}"
-                                                            data-apartment-type="{{ apartment.apartment_type }}"
-                                                            data-price="{{ apartment.price }}"
-                                                            data-status="{{ apartment.status }}"
-                                                            data-terrace="{{ apartment.terrace }}"
-                                                            data-decoration="{{ apartment.decoration }}"
-                                                            data-kitchen-space="{{ apartment.kitchen_space }}"
-                                                        >
-                                                            {{ apartment.area }} м²
-                                                        </a>
-                                                    </td>
-                                                    <td class="w-8 p-2" style="height: 80px;"> 
-                                                        <div class="position-relative d-inline-block">
-                                                            <a href="{% url 'main:apartment_detail' building_id=apartment.building.id apartment_id=apartment.id %}" 
-                                                               class="btn btn-sm btn-dark p-1"
-                                                               title="Редактировать">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                                                                </svg>
+                                            {% if apartment.section == section %}
+                                                {% if apartment.status == 'sold' %}
+                                                <table class="table-bordered bg-red" style="width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;" >
+                                                {%elif apartment.status == 'reserved' %}
+                                                
+                                                <table class="table-bordered bg-purple" style="width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;">
+                                                {%elif apartment.status == 'shortReserved' %}
+                                                
+                                                <table class="table-bordered" style="background-color: #700707; width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;">
+                                                {% else %}
+                                                <table class="table-bordered bg-green" style="width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed;" >
+                                                {%endif%}                                              
+                                                    <tr style="height: max-content;">
+                                                        <td class="w-8 min-w-6 p-2" style="height: 150px;">
+                                                            <a href="#" class="apartment-link text-white" 
+                                                                data-id="{{ apartment.id }}" 
+                                                                data-number="{{ apartment.number }}" 
+                                                                data-area="{{ apartment.area }}"
+                                                                data-window-orientation="{{ apartment.window_orientation }}"
+                                                                data-rooms="{{ apartment.rooms }}"
+                                                                data-apartment-type="{{ apartment.apartment_type }}"
+                                                                data-price="{{ apartment.price }}"
+                                                                data-status="{{ apartment.status }}"
+                                                                data-terrace="{{ apartment.terrace }}"
+                                                                data-decoration="{{ apartment.decoration }}"
+                                                                data-kitchen-space="{{ apartment.kitchen_space }}"
+                                                            >
+                                                                №{{ apartment.number }}
                                                             </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="w-8 p-2" style="height: 80px;">
-                                                        <a href="#" class="apartment-link text-white" 
-                                                            data-id="{{ apartment.id }}"    
-                                                            data-number="{{ apartment.number }}" 
-                                                            data-area="{{ apartment.area }}"
-                                                            data-window-orientation="{{ apartment.window_orientation }}"
-                                                            data-rooms="{{ apartment.rooms }}"
-                                                            data-apartment-type="{{ apartment.apartment_type }}"
-                                                            data-price="{{ apartment.price }}"
-                                                            data-status="{{ apartment.status }}"
-                                                            data-terrace="{{ apartment.terrace }}"
-                                                            data-decoration="{{ apartment.decoration }}"
-                                                            data-kitchen-space="{{ apartment.kitchen_space }}"
-                                                        >
-                                                            {{ apartment.rooms }}к
-                                                        </a>
-                                                    </td>
-                                                    <td class="w-8 p-2" style="height: 80px;">
-                                                        <a href="#" class="apartment-link text-white" 
-                                                            data-id="{{ apartment.id }}" 
-                                                            data-number="{{ apartment.number }}" 
-                                                            data-area="{{ apartment.area }}"
-                                                            data-window-orientation="{{ apartment.window_orientation }}"
-                                                            data-rooms="{{ apartment.rooms }}"
-                                                            data-apartment-type="{{ apartment.apartment_type }}"
-                                                            data-price="{{ apartment.price }}"
-                                                            data-status="{{ apartment.status }}"
-                                                            data-terrace="{{ apartment.terrace }}"
-                                                            data-decoration="{{ apartment.decoration }}"
-                                                            data-kitchen-space="{{ apartment.kitchen_space }}"
-                                                        >
-                                                            {{ apartment.apartment_type }}
-                                                        </a>
-                                                    </td>
-                                                    <td class="w-8 p-2" style="height: 80px;">
-                                                        <a href="#" class="apartment-link text-white" 
-                                                            data-id="{{ apartment.id }}" 
-                                                            data-number="{{ apartment.number }}" 
-                                                            data-area="{{ apartment.area }}"
-                                                            data-window-orientation="{{ apartment.window_orientation }}"
-                                                            data-rooms="{{ apartment.rooms }}"
-                                                            data-apartment-type="{{ apartment.apartment_type }}"
-                                                            data-price="{{ apartment.price }}"
-                                                            data-status="{{ apartment.status }}"
-                                                            data-terrace="{{ apartment.terrace }}"
-                                                            data-decoration="{{ apartment.decoration }}"
-                                                            data-kitchen-space="{{ apartment.kitchen_space }}"
-                                                        >
-                                                            {{ apartment.price }}
-                                                        </a>
-                                                    </td>
-                                                    <td class="w-8 p-2" style="height: 80px;">
-                                                        <a href="#" class="apartment-link text-white" 
-                                                            data-id="{{ apartment.id }}" 
-                                                            data-number="{{ apartment.number }}" 
-                                                            data-area="{{ apartment.area }}"
-                                                            data-window-orientation="{{ apartment.window_orientation }}"
-                                                            data-rooms="{{ apartment.rooms }}"
-                                                            data-apartment-type="{{ apartment.apartment_type }}"
-                                                            data-price="{{ apartment.price }}"
-                                                            data-status="{{ apartment.status }}"
-                                                            data-terrace="{{ apartment.terrace }}"
-                                                            data-decoration="{{ apartment.decoration }}"
-                                                            data-kitchen-space="{{ apartment.kitchen_space }}"
-                                                        >
-                                                            {{ apartment.kitchen_space }}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        {%endif%}
-                                    {% endfor %}
-                                {% endif %}
-                            </td>
+                                                        </td>
+                                                        <td class="w-8 min-w-6 p-2" style="height: 150px;">
+                                                            <a href="#" class="apartment-link text-white"
+                                                                data-id="{{ apartment.id }}" 
+                                                                data-number="{{ apartment.number }}" 
+                                                                data-area="{{ apartment.area }}"
+                                                                data-window-orientation="{{ apartment.window_orientation }}"
+                                                                data-rooms="{{ apartment.rooms }}"
+                                                                data-apartment-type="{{ apartment.apartment_type }}"
+                                                                data-price="{{ apartment.price }}"
+                                                                data-status="{{ apartment.status }}"
+                                                                data-terrace="{{ apartment.terrace }}"
+                                                                data-decoration="{{ apartment.decoration }}"
+                                                                data-kitchen-space="{{ apartment.kitchen_space }}"
+                                                            >
+                                                                {{ apartment.window_orientation }}
+                                                            </a>
+                                                        </td>
+                                                        <td class="w-8 min-w-6 p-2" style="height: 150px;">
+                                                            
+                                                            <a href="#" class="apartment-link text-white" 
+                                                                data-id="{{ apartment.id }}"
+                                                                data-number="{{ apartment.number }}" 
+                                                                data-area="{{ apartment.area }}"
+                                                                data-window-orientation="{{ apartment.window_orientation }}"
+                                                                data-rooms="{{ apartment.rooms }}"
+                                                                data-apartment-type="{{ apartment.apartment_type }}"
+                                                                data-price="{{ apartment.price }}"
+                                                                data-status="{{ apartment.status }}"
+                                                                data-terrace="{{ apartment.terrace }}"
+                                                                data-decoration="{{ apartment.decoration }}"
+                                                                data-kitchen-space="{{ apartment.kitchen_space }}"
+                                                            >
+                                                                {{ apartment.area }} м²
+                                                            </a>
+                                                        </td>
+                                                        <td class="w-8 min-w-6 p-2" style="height: 150px;"> 
+                                                            <div class="position-relative d-inline-block">
+                                                                <a href="{% url 'main:apartment_detail' building_id=apartment.building.id apartment_id=apartment.id %}" 
+                                                                class="btn btn-sm btn-dark p-1"
+                                                                title="Редактировать">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                                                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                                                    </svg>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="w-8 min-w-6 p-2" style="height: 150px;">
+                                                            <a href="#" class="apartment-link text-white" 
+                                                                data-id="{{ apartment.id }}"    
+                                                                data-number="{{ apartment.number }}" 
+                                                                data-area="{{ apartment.area }}"
+                                                                data-window-orientation="{{ apartment.window_orientation }}"
+                                                                data-rooms="{{ apartment.rooms }}"
+                                                                data-apartment-type="{{ apartment.apartment_type }}"
+                                                                data-price="{{ apartment.price }}"
+                                                                data-status="{{ apartment.status }}"
+                                                                data-terrace="{{ apartment.terrace }}"
+                                                                data-decoration="{{ apartment.decoration }}"
+                                                                data-kitchen-space="{{ apartment.kitchen_space }}"
+                                                            >
+                                                                {{ apartment.rooms }}к
+                                                            </a>
+                                                        </td>
+                                                        <td class="w-8 min-w-6 p-2" style="height: 150px;">
+                                                            <a href="#" class="apartment-link text-white" 
+                                                                data-id="{{ apartment.id }}" 
+                                                                data-number="{{ apartment.number }}" 
+                                                                data-area="{{ apartment.area }}"
+                                                                data-window-orientation="{{ apartment.window_orientation }}"
+                                                                data-rooms="{{ apartment.rooms }}"
+                                                                data-apartment-type="{{ apartment.apartment_type }}"
+                                                                data-price="{{ apartment.price }}"
+                                                                data-status="{{ apartment.status }}"
+                                                                data-terrace="{{ apartment.terrace }}"
+                                                                data-decoration="{{ apartment.decoration }}"
+                                                                data-kitchen-space="{{ apartment.kitchen_space }}"
+                                                            >
+                                                                {{ apartment.apartment_type }}
+                                                            </a>
+                                                        </td>
+                                                        <td class="w-8 min-w-6 p-2" style="height: 150px;">
+                                                            <a href="#" class="apartment-link text-white" 
+                                                                data-id="{{ apartment.id }}" 
+                                                                data-number="{{ apartment.number }}" 
+                                                                data-area="{{ apartment.area }}"
+                                                                data-window-orientation="{{ apartment.window_orientation }}"
+                                                                data-rooms="{{ apartment.rooms }}"
+                                                                data-apartment-type="{{ apartment.apartment_type }}"
+                                                                data-price="{{ apartment.price }}"
+                                                                data-status="{{ apartment.status }}"
+                                                                data-terrace="{{ apartment.terrace }}"
+                                                                data-decoration="{{ apartment.decoration }}"
+                                                                data-kitchen-space="{{ apartment.kitchen_space }}"
+                                                            >
+                                                                {{ apartment.price }}
+                                                            </a>
+                                                        </td>
+                                                        <td class="w-8 min-w-6 p-2" style="height: 150px;">
+                                                            <a href="#" class="apartment-link text-white" 
+                                                                data-id="{{ apartment.id }}" 
+                                                                data-number="{{ apartment.number }}" 
+                                                                data-area="{{ apartment.area }}"
+                                                                data-window-orientation="{{ apartment.window_orientation }}"
+                                                                data-rooms="{{ apartment.rooms }}"
+                                                                data-apartment-type="{{ apartment.apartment_type }}"
+                                                                data-price="{{ apartment.price }}"
+                                                                data-status="{{ apartment.status }}"
+                                                                data-terrace="{{ apartment.terrace }}"
+                                                                data-decoration="{{ apartment.decoration }}"
+                                                                data-kitchen-space="{{ apartment.kitchen_space }}"
+                                                            >
+                                                                {{ apartment.kitchen_space }}
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            {%endif%}
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
                         {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            
         {% endfor %}
     </div>
 </div>

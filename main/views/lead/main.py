@@ -353,23 +353,63 @@ class LeadUnassembledView(ListView, BaseView):
 
 class LeadUploadView(BaseView):
     def post(self, request, *args, **kwargs):
+        
         if 'excel' in request.FILES:
             leads_count = 0
             # if os.path.splitext(request.FILES['excel'].name)[1] == '.xls':
             wb = xlrd.open_workbook(file_contents=request.FILES['excel'].read())
             sh = wb.sheet_by_index(0)
-            for rx in range(sh.nrows):
-                if sh.cell_type(rx, 1) != xlrd.XL_CELL_EMPTY:
+            for rx in range(1, sh.nrows):
+                if sh.cell_type(rx, 16) != xlrd.XL_CELL_EMPTY:
                     try:
-                        Lead.objects.get(phone=f'7{int(sh.cell_value(rx, 1))}')
+                        phone_value = sh.cell_value(rx, 16)
+                        phone_number = int(phone_value)
+                        # Если это число (float/int) — просто преобразуем
+                        if isinstance(phone_value, (int, float)):
+                            phone_number = int(phone_value)
+                            Lead.objects.get(phone=phone_number)
+                        # Если это строка, проверяем, состоит ли она только из цифр
+                        elif isinstance(phone_value, str) and phone_value.isdigit():
+                            phone_number = int(phone_value)
+                            Lead.objects.get(phone=phone_number)
+                        # Если не число и не строка с цифрами — ошибка
+                        else:
+                            messages.error(request, f"Ошибка: в ячейке {rx},16 неверный формат ({phone_value})")
                     except Lead.DoesNotExist:
                         leads_count += 1
                         lead = Lead()
-                        lead.phone = f'7{int(sh.cell_value(rx, 1))}'
-                        lead.surname = 'Контакт из файла'
+                        lead.phone = f'{int(sh.cell_value(rx, 16))}'
+                        lead.surname = f"{sh.cell_value(rx, 14)}"
                         lead.save()
                         LeadSource.objects.create(lead=lead,
                                                   source=Source.objects.get_or_create(name='База для обзвона')[0])
+                        
+                        comment_text = (
+                            f"sourse: {sh.cell_value(rx, 1)}\n"  # Колонка B
+                            f"city: {sh.cell_value(rx, 2)}\n"  # Колонка C
+                            f"district {sh.cell_value(rx, 3)}\n"  # Колонка D
+                            f"building: {sh.cell_value(rx, 6)}\n"  # Колонка G
+                            f"location: {sh.cell_value(rx, 7)}\n"  # Колонка H
+                            f"purpose: {sh.cell_value(rx, 8)}\n"  # Колонка I
+                            f"beds: {sh.cell_value(rx, 10)}\n"  # Колонка K
+                            f"baths: {sh.cell_value(rx, 11)}\n"  # Колонка L
+                            f"area_sqft: {sh.cell_value(rx, 12)}\n"  # Колонка M
+                            f"price: {sh.cell_value(rx, 13)}\n"  # Колонка N
+                            f"buy: {sh.cell_value(rx, 15)}\n"  # Колонка P
+                        )
+
+                        # Создаем комментарий
+                        Comment.objects.create(
+                            type="lead",
+                            item_id=lead.id,
+                            text=comment_text
+                        )
+                    except ValueError:
+                        messages.error(request, "Нечисловое значение в номере телефона!")
+                    except Lead.MultipleObjectsReturned:
+                        messages.error(request, "Ошибка: найдено несколько лидов с таким номером!")
+                    except Exception as e:
+                        messages.error(request, f"Другая ошибка: {e}")
             messages.success(request, f'Было выгружено <b>{leads_count}</b> новых контактов')
         else:
             messages.error(request, 'А файл точно был прикреплен?')
