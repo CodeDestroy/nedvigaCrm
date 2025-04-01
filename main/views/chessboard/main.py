@@ -1,4 +1,4 @@
-from main.models import Complex, Building, Apartment, ApartmentPhoto
+from main.models import Complex, Building, Apartment, ApartmentPhoto, ApartmentTypes, VisionTypes, Coefficients
 from main.views import BaseView, BaseDetailView 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.conf import settings
@@ -10,7 +10,8 @@ from django.views.generic import CreateView, UpdateView, ListView
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
-from main.forms import ApartmentForm, ApartmentCreateForm, BuildingCreateForm, ComplexCreateForm, ApartmentPhotoForm, ApartmentDetailForm, ComplexUpdateForm, BuildingUpdateForm
+from main.forms import ApartmentForm, ApartmentCreateForm, BuildingCreateForm, ComplexCreateForm, ApartmentPhotoForm, ApartmentDetailForm, ComplexUpdateForm, BuildingUpdateForm,\
+                        VisionTypeForm, ApartmentTypeForm, CoefficentForm
 from django.urls import reverse
 
 class ResidentialComplexListView(ListView, BaseView):
@@ -102,6 +103,12 @@ class ApartmentListView(ListView, BaseView):
     def get(self, request, building_id):
         building_instance = get_object_or_404(Building, pk=building_id)
         apartments = Apartment.objects.filter(building_id=building_id).order_by('-floor', 'col', '-section')
+        complex_instance = building_instance.complex
+
+        # Получаем типы квартир, виды и коэффициенты для этого комплекса
+        apartment_types = ApartmentTypes.objects.filter(complex=complex_instance)
+        vision_types = VisionTypes.objects.filter(complex=complex_instance)
+        coefficients = Coefficients.objects.filter(complex=complex_instance)
 
         floors = {}
         sections = {}
@@ -127,7 +134,10 @@ class ApartmentListView(ListView, BaseView):
             'building': building_instance,
             'floors': floors,
             'sections': reversed(sections),
-            'column_range': column_range
+            'column_range': column_range,
+            'apartment_types': apartment_types,
+            'vision_types': vision_types,
+            'coefficients': coefficients,
         }
         return render(request, 'chessboard/apartment_list.html', context)
 
@@ -239,3 +249,111 @@ class ApartmentPhotoUploadView(View):
         ApartmentPhoto.objects.create(apartment=apartment, photo=photo)
 
         return JsonResponse({'message': 'Фото успешно загружено'})
+    
+
+class ApartmentTypeCreateView(View):
+    def get(self, request, complex_id):
+        complex_obj = get_object_or_404(Complex, id=complex_id)
+        form = ApartmentTypeForm()
+        return render(request, 'chessboard/apartment_type_form.html', {'form': form, 'complex': complex_obj})
+    
+    def post(self, request, complex_id):
+        complex_obj = get_object_or_404(Complex, id=complex_id)
+        form = ApartmentTypeForm(request.POST)
+        if form.is_valid():
+            apartment_type = form.save(commit=False)
+            apartment_type.complex = complex_obj
+            apartment_type.save()
+            return redirect(reverse('main:complex_settings', kwargs={'complex_id': complex_id}))
+        return render(request, 'chessboard/apartment_type_form.html', {'form': form, 'complex': complex_obj})
+
+class ApartmentTypeUpdateView(View):
+    def get(self, request, complex_id, pk):
+        apartment_type = get_object_or_404(ApartmentTypes, id=pk, complex_id=complex_id)
+        form = ApartmentTypeForm(instance=apartment_type)
+        return render(request, 'chessboard/apartment_type_form.html', {'form': form, 'complex': apartment_type.complex})
+    
+    def post(self, request, complex_id, pk):
+        apartment_type = get_object_or_404(ApartmentTypes, id=pk, complex_id=complex_id)
+        form = ApartmentTypeForm(request.POST, instance=apartment_type)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('main:complex_settings', kwargs={'complex_id': complex_id}))
+        return render(request, 'apartment_type_form.html', {'form': form, 'complex': apartment_type.complex})
+
+class ComplexSettingsView(View):
+    def get(self, request, complex_id):
+        complex_obj = get_object_or_404(Complex, id=complex_id)
+        apartment_types = ApartmentTypes.objects.filter(complex=complex_obj)
+        vision_types = VisionTypes.objects.filter(complex=complex_obj)
+        coefficients = Coefficients.objects.filter(complex=complex_obj)
+        
+        return render(request, 'chessboard/complex_settings.html', {
+            'complex': complex_obj,
+            'apartment_types': apartment_types,
+            'vision_types': vision_types,
+            'coefficients': coefficients,
+        })
+    
+class VisionTypeCreateView(View):
+    def get(self, request, complex_id):
+        complex_obj = get_object_or_404(Complex, id=complex_id)
+        form = VisionTypeForm()
+        return render(request, 'chessboard/vision_type_form.html', {'form': form, 'complex': complex_obj})
+
+    def post(self, request, complex_id):
+        complex_obj = get_object_or_404(Complex, id=complex_id)
+        form = VisionTypeForm(request.POST)
+        if form.is_valid():
+            vision_type = form.save(commit=False)
+            vision_type.complex = complex_obj
+            vision_type.save()
+            return redirect(reverse('main:complex_settings', kwargs={'complex_id': complex_id}))
+        return render(request, 'chessboard/vision_type_form.html', {'form': form, 'complex': complex_obj})
+
+
+class VisionTypeUpdateView(View):
+    def get(self, request, complex_id, pk):
+        vision_type = get_object_or_404(VisionTypes, id=pk, complex_id=complex_id)
+        form = VisionTypeForm(instance=vision_type)
+        return render(request, 'chessboard/vision_type_form.html', {'form': form, 'complex': vision_type.complex})
+
+    def post(self, request, complex_id, pk):
+        vision_type = get_object_or_404(VisionTypes, id=pk, complex_id=complex_id)
+        form = VisionTypeForm(request.POST, instance=vision_type)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('main:complex_settings', kwargs={'complex_id': complex_id}))
+        return render(request, 'chessboard/vision_type_form.html', {'form': form, 'complex': vision_type.complex})
+
+
+class CoefficientCreateView(View):
+    def get(self, request, complex_id):
+        complex_obj = get_object_or_404(Complex, id=complex_id)
+        form = CoefficentForm()
+        return render(request, 'chessboard/coefficient_form.html', {'form': form, 'complex': complex_obj})
+
+    def post(self, request, complex_id):
+        complex_obj = get_object_or_404(Complex, id=complex_id)
+        form = CoefficentForm(request.POST)
+        if form.is_valid():
+            coefficient = form.save(commit=False)
+            coefficient.complex = complex_obj
+            coefficient.save()
+            return redirect(reverse('main:complex_settings', kwargs={'complex_id': complex_id}))
+        return render(request, 'chessboard/coefficient_form.html', {'form': form, 'complex': complex_obj})
+
+
+class CoefficientUpdateView(View):
+    def get(self, request, complex_id, pk):
+        coefficient = get_object_or_404(Coefficients, id=pk, complex_id=complex_id)
+        form = CoefficentForm(instance=coefficient)
+        return render(request, 'chessboard/coefficient_form.html', {'form': form, 'complex': coefficient.complex})
+
+    def post(self, request, complex_id, pk):
+        coefficient = get_object_or_404(Coefficients, id=pk, complex_id=complex_id)
+        form = CoefficentForm(request.POST, instance=coefficient)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('main:complex_settings', kwargs={'complex_id': complex_id}))
+        return render(request, 'chessboard/coefficient_form.html', {'form': form, 'complex': coefficient.complex})

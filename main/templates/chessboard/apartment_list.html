@@ -252,19 +252,6 @@
                 <label class="input-group-text min-w-25" for="modal-apartment-area">Площадь</label>
                 <input type="number" name="area" class="form-control"  min="0" step="0.01" id="modal-apartment-area">
             </div>
-            <!-- <div class="input-group mb-3">
-                <label class="input-group-text min-w-25" for="modal-apartment-rooms">Комнаты</label>
-                <input type="number" name="rooms" class="form-control" maxlength="100" id="modal-apartment-rooms">
-            </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text min-w-25">Статус</label>
-                <select name="status" class="form-control" id="modal-apartment-status" required>
-                    <option value="available">Свободно</option>
-                    <option value="reserved">Платная бронь</option>
-                    <option value="shortReserved">Короткая бронь</option>
-                    <option value="sold">Продана</option>
-                </select>
-            </div> -->
             <div class="input-group mb-3 ">
                 <label class="input-group-text min-w-25">Комнаты</label>
                 <select name="rooms" class="form-control"  id="modal-apartment-rooms" required>
@@ -583,29 +570,45 @@
         <div class="modal-body">
             <label for="apartmentType" class="form-label">Тип квартиры:</label>
             <select id="apartmentType" class="form-select">
-                <option value="studio">Студия</option>
+                {% for apartmentType in apartment_types %}
+                    <option value="{{apartmentType.basePrice}}">{{apartmentType.name}}</option>
+                    <!-- <option value="good">Хороший (1,15)</option>
+                    <option value="reservoir">Вид на водохранилище (1,2)</option>
+                    <option value="bad">Плохой (0,9)</option> -->
+                {% endfor %}
+                <!-- <option value="studio">Студия</option>
                 <option value="1ka">1-комнатная</option>
                 <option value="2e">2-е</option>
                 <option value="2ka">2-комнатная</option>
                 <option value="3ka">3-комнатная</option>
                 <option value="3e96">3-е 96 кв.м.</option>
-                <option value="3e">3-е</option>
+                <option value="3e">3-е</option> -->
             </select>
             <label for="viewType" class="form-label mt-2">Вид:</label>
             <select id="viewType" class="form-select">
-                <option value="standard">Стандартный (1)</option>
-                <option value="good">Хороший (1,15)</option>
-                <option value="reservoir">Вид на водохранилище (1,2)</option>
-                <option value="bad">Плохой (0,9)</option>
+                {% for vision in vision_types %}
+                    <option value="{{vision.coefficient}}">{{vision.name}} {{vision.coefficient}}</option>
+                    <!-- <option value="good">Хороший (1,15)</option>
+                    <option value="reservoir">Вид на водохранилище (1,2)</option>
+                    <option value="bad">Плохой (0,9)</option> -->
+                {% endfor %}
             </select>
-            <div class="form-check mt-2">
+
+            <label for="coefficients">Коэфиценты:</label>
+            {% for coefficient in coefficients %}
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" value="{{coefficient.coefficient}}" onchange='setGlobalCoef(this);'>
+                    <label class="form-check-label" >{{coefficient.name}} ({{coefficient.coefficient}})</label>
+                </div>
+            {% endfor %}
+            <!-- <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" id="mezzanine">
                 <label class="form-check-label" for="mezzanine">Антресоль (1,1)</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="terraceMezzanine">
                 <label class="form-check-label" for="terraceMezzanine">Террасы+антресоль (1,15)</label>
-            </div>
+            </div> -->
             <p class="mt-3">Площадь: <span id="area">---</span> м²</p>
             <p>Цена за м²: <span id="pricePerM2">---</span> руб.</p>
             <h3><strong>Итоговая стоимость:<br> <span id="totalPrice">---</span> руб.</strong></h3>
@@ -625,31 +628,45 @@
         <div class="modal-body">
             <label for="apartmentTypeCreate" class="form-label">Тип квартиры:</label>
             <select id="apartmentTypeCreate" class="form-select">
-                <option value="studio">Студия</option>
+                {% for apartmentType in apartment_types %}
+                    <option value="{{apartmentType.basePrice}}">{{apartmentType.name}}</option>
+                    <!-- <option value="good">Хороший (1,15)</option>
+                    <option value="reservoir">Вид на водохранилище (1,2)</option>
+                    <option value="bad">Плохой (0,9)</option> -->
+                {% endfor %}
+                <!-- <option value="studio">Студия</option>
                 <option value="1ka">1-комнатная</option>
                 <option value="2e">2-е</option>
                 <option value="2ka">2-комнатная</option>
                 <option value="3ka">3-комнатная</option>
                 <option value="3e96">3-е 96 кв.м.</option>
-                <option value="3e">3-е</option>
+                <option value="3e">3-е</option> -->
             </select>
             <label for="viewTypeCreate" class="form-label mt-2">Вид:</label>
             <select id="viewTypeCreate" class="form-select">
-                <option value="standard">Стандартный (1)</option>
-                <option value="good">Хороший (1,15)</option>
-                <option value="reservoir">Вид на водохранилище (1,2)</option>
-                <option value="bad">Плохой (0,9)</option>
+                {% for vision in vision_types %}
+                    <option value="{{vision.coefficient}}">{{vision.name}} {{vision.coefficient}}</option>
+                    <!-- <option value="good">Хороший (1,15)</option>
+                    <option value="reservoir">Вид на водохранилище (1,2)</option>
+                    <option value="bad">Плохой (0,9)</option> -->
+                {% endfor %}
             </select>
     
             <label for="coefficients">Коэфиценты:</label>
-            <div class="form-check mt-2">
+            {% for coefficient in coefficients %}
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" value="{{coefficient.coefficient}}" onchange='setGlobalCoefCreate(this);'>
+                    <label class="form-check-label" >{{coefficient.name}} ({{coefficient.coefficient}})</label>
+                </div>
+            {% endfor %}
+            <!-- <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" id="mezzanineCreate">
                 <label class="form-check-label" for="mezzanineCreate">Антресоль (1,1)</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="terraceMezzanineCreate">
                 <label class="form-check-label" for="terraceMezzanineCreate">Террасы+антресоль (1,15)</label>
-            </div>
+            </div> -->
             <p>Площадь: <span id="areaCreate">---</span> м²</p>
             <p>Цена за м²: <span id="pricePerM2Create">---</span> руб.</p>
             <h3><strong>Итоговая стоимость:<br> <span id="totalPriceCreate">---</span> руб.</strong></h3>
@@ -661,33 +678,6 @@
         </div>
     </div>
 </div>
-<!-- 
-<style>
-    /* Стили для модального окна */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
-    .modal-content {
-        background-color: white;
-        margin: 15% auto;
-        padding: 20px;
-        border-radius: 10px;
-        width: 300px;
-        text-align: center;
-    }
-    .close {
-        float: right;
-        font-size: 20px;
-        cursor: pointer;
-    }
-</style> -->
 
 <script>
     const priceData = {
@@ -709,6 +699,57 @@
         "terraceMezzanine": 1.15
     };
 
+    let globalCoef = 1
+    let globalCoefCreate = 1
+
+/*     function setGlobalCoef(coef) {
+        if (coef.checked) {
+            globalCoef *= coef
+            
+        }
+        else {
+            globalCoef /= coef
+        }
+        console.log(coef)
+        console.log(coef.value)
+        calculatePrice()
+    }
+
+    function setGlobalCoefCreate(coef) {
+        globalCoefCreate *= coef
+        if (coef.checked) {
+            globalCoefCreate *= coef
+        }
+        else {
+            globalCoef /= coef
+        }
+        calculatePrice()
+    } */
+    function setGlobalCoef(coef) {
+        let coefValue = parseFloat((coef.value).replaceAll(',', '.')) || 1; // Парсим значение чекбокса, если не число — берём 1
+
+        if (coef.checked) {
+            globalCoef *= coefValue;
+        } else {
+            globalCoef /= coefValue;
+        }
+
+        console.log('globalCoef:', globalCoef);
+        calculatePrice();
+    }
+    function setGlobalCoefCreate(coef) {
+        let coefValue = parseFloat((coef.value).replaceAll(',', '.')) || 1; // Парсим значение чекбокса, если не число — берём 1
+
+        if (coef.checked) {
+            globalCoefCreate *= coefValue;
+        } else {
+            globalCoefCreate /= coefValue;
+        }
+
+        console.log('globalCoef:', globalCoef);
+        calculatePrice();
+    }
+
     document.getElementById("openModal").addEventListener("click", function() {
         document.getElementById("priceModal").style.display = "block";
     });
@@ -728,15 +769,18 @@
     function calculatePrice() {
         /* event.preventDefault(); */
         console.log('calc')
-        let type = document.getElementById("apartmentType").value;
-        let view = document.getElementById("viewType").value;
-        let hasMezzanine = document.getElementById("mezzanine").checked;
-        let hasTerraceMezzanine = document.getElementById("terraceMezzanine").checked;
+        let type = (document.getElementById("apartmentType").value).replaceAll(/\s/g,'').replace(',', '.');
+        let view = (document.getElementById("viewType").value).replace(',', '.');
+        /* let hasMezzanine = document.getElementById("mezzanine").checked;
+        let hasTerraceMezzanine = document.getElementById("terraceMezzanine").checked; */
 
-        let basePrice = priceData[type]["standard"];
-        let viewCoefficient = coefficients[view];
-        let mezzanineCoefficient = hasMezzanine ? coefficients["mezzanine"] : (hasTerraceMezzanine ? coefficients["terraceMezzanine"] : 1);
-        let finalPricePerM2 = basePrice * viewCoefficient * mezzanineCoefficient;
+        let basePrice = parseFloat(type)
+        let viewCoefficient = parseFloat(view);
+        
+        /* let mezzanineCoefficient = hasMezzanine ? coefficients["mezzanine"] : (hasTerraceMezzanine ? coefficients["terraceMezzanine"] : 1); */
+        /* let finalPricePerM2 = basePrice * viewCoefficient * mezzanineCoefficient; */
+        console.log(globalCoef)
+        let finalPricePerM2 = basePrice * viewCoefficient * globalCoef;
 
         let area = document.getElementById("modal-apartment-area").value; // Условная площадь
         let totalPrice = finalPricePerM2 * area;
@@ -748,15 +792,17 @@
 
     function calculatePriceCreate() {
         console.log('calc create')
-        let type = document.getElementById("apartmentTypeCreate").value;
-        let view = document.getElementById("viewTypeCreate").value;
-        let hasMezzanine = document.getElementById("mezzanineCreate").checked;
+        let type = (document.getElementById("apartmentTypeCreate").value).replaceAll(/\s/g,'').replace(',', '.');
+        
+        let view = (document.getElementById("viewTypeCreate").value).replace(',', '.');;
+        /* let hasMezzanine = document.getElementById("mezzanineCreate").checked;
         let hasTerraceMezzanine = document.getElementById("terraceMezzanineCreate").checked;
-
-        let basePrice = priceData[type]["standard"];
-        let viewCoefficient = coefficients[view];
-        let mezzanineCoefficient = hasMezzanine ? coefficients["mezzanine"] : (hasTerraceMezzanine ? coefficients["terraceMezzanine"] : 1);
-        let finalPricePerM2 = basePrice * viewCoefficient * mezzanineCoefficient;
+ */
+        let basePrice = parseFloat(type)
+        let viewCoefficient = parseFloat(view);
+        /* let mezzanineCoefficient = hasMezzanine ? coefficients["mezzanine"] : (hasTerraceMezzanine ? coefficients["terraceMezzanine"] : 1); */
+        /* let finalPricePerM2 = basePrice * viewCoefficient * mezzanineCoefficient; */
+        let finalPricePerM2 = basePrice * viewCoefficient * globalCoefCreate;
 
         let area = document.getElementById("modal-create-area").value; // Условная площадь
         let totalPrice = finalPricePerM2 * area;

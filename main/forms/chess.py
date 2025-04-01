@@ -1,6 +1,6 @@
 from django import forms
 from . import BaseModelForm
-from ..models import Complex, Building, Apartment
+from ..models import Complex, Building, Apartment, VisionTypes, Coefficients, ApartmentTypes
 
 class ApartmentForm(BaseModelForm):
     class Meta:
@@ -131,3 +131,32 @@ class ComplexUpdateForm(BaseModelForm):
             'city': forms.TextInput(attrs={'class': 'form-control'}),
             'alternative_description': forms.Textarea(attrs={'class': 'form-control'})
         }
+
+class VisionTypeForm(BaseModelForm):
+    class Meta:
+        model = VisionTypes
+        fields = ('name', 'coefficient')  # Поля для редактирования
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'coefficient': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 0.01}),  
+        }
+class ApartmentTypeForm(BaseModelForm):
+    class Meta:
+        model = ApartmentTypes
+        fields = ('name', 'basePrice')  # Поля для редактирования
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'basePrice': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 1}),  
+        } 
+
+class CoefficentForm(BaseModelForm):
+    class Meta:
+        model = Coefficients
+        fields = ('name', 'coefficient')  # Поля для редактирования
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'coefficient': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 0.01}),  
+        }  

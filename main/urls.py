@@ -336,8 +336,20 @@ urlpatterns = [
     path('chess/', include([
         path('', views.ResidentialComplexListView.as_view(), name='residential_complex_list'),
         path('complex/create/', views.ResidentialComplexCreateView.as_view(), name='residential_complex_create'),
-        path('complex/<int:complex_id>/update/', views.ResidentialComplexUpdateView.as_view(), name='residential_complex_update'),
-        path('complex/<int:complex_id>/', views.BuildingListView.as_view(), name='building_list'),
+        path('complex/<int:complex_id>/', include([
+            path('', views.BuildingListView.as_view(), name='building_list'),
+            
+            path('settings/', views.ComplexSettingsView.as_view(), name='complex_settings'),
+            path('update/', views.ResidentialComplexUpdateView.as_view(), name='residential_complex_update'),
+            path('apartment-type/create/', views.ApartmentTypeCreateView.as_view(), name='apartment_type_create'),
+            path('apartment-type/<int:pk>/update/', views.ApartmentTypeUpdateView.as_view(), name='apartment_type_update'),
+            path('vision-type/create/', views.VisionTypeCreateView.as_view(), name='vision_type_create'),
+            path('vision-type/<int:pk>/update/', views.VisionTypeUpdateView.as_view(), name='vision_type_update'),
+
+            path('coefficient/create/', views.CoefficientCreateView.as_view(), name='coefficient_create'),
+            path('coefficient/<int:pk>/update/', views.CoefficientUpdateView.as_view(), name='coefficient_update'),
+
+        ])),
         
         path('building/', include([
             path('create/', views.BuildingCreateView.as_view(), name='building_create'),

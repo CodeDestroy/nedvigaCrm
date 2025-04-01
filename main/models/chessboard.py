@@ -113,7 +113,41 @@ class Apartment(CreatedUpdatedMixin):
         verbose_name = 'Квартиры'
         verbose_name_plural = 'Квартиры'
 
-
-
-
+class ApartmentTypes(CreatedUpdatedMixin):
+    complex = models.ForeignKey(Complex, on_delete=models.CASCADE, related_name='apartment_types')
+    name = models.CharField(verbose_name='Название', max_length=255)
+    basePrice = models.DecimalField(verbose_name='Цена', max_digits=12, decimal_places=2)
+    def __str__(self):
+        return f"{self.complex.name} - {self.name}"
     
+    class Meta(object):
+        app_label = 'main'
+        db_table = 'apartment_types'
+        verbose_name = 'Типы квартир'
+        verbose_name_plural = 'Типы квартир'
+
+class VisionTypes(CreatedUpdatedMixin):
+    complex = models.ForeignKey(Complex, on_delete=models.CASCADE, related_name='vision_types')
+    name = models.CharField(verbose_name='Название', max_length=255)
+    coefficient = models.FloatField(verbose_name='Коэффициент', default=1)
+    def __str__(self):
+        return f"{self.complex.name} - {self.name}"
+    
+    class Meta(object):
+        app_label = 'main'
+        db_table = 'vision_types'
+        verbose_name = 'Виды'
+        verbose_name_plural = 'Виды'
+
+class Coefficients(CreatedUpdatedMixin):
+    complex = models.ForeignKey(Complex, on_delete=models.CASCADE, related_name='coefficients')
+    name = models.CharField(verbose_name='Название', max_length=255)
+    coefficient = models.FloatField(verbose_name='Коэффициент', default=1)
+    def __str__(self):
+        return f"{self.complex.name} - {self.name}"
+    
+    class Meta(object):
+        app_label = 'main'
+        db_table = 'coefficients'
+        verbose_name = 'Остальные коэфиценты'
+        verbose_name_plural = 'Остальные коэфиценты'
