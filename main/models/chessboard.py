@@ -57,7 +57,8 @@ class Apartment(CreatedUpdatedMixin):
         ('available', 'Свободно'),
         ('reserved', 'Платная бронь'),
         ('shortReserved', 'Короткая бронь'),
-        ('sold', 'Продана')
+        ('sold', 'Продана'),
+        ('closedToSell', 'Закрыто к продажу'),
     ]
     
     building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name='apartments')
@@ -67,7 +68,12 @@ class Apartment(CreatedUpdatedMixin):
     number = models.CharField(verbose_name='Номер квартиры', max_length=10)
     
     window_orientation = models.CharField(verbose_name='Вид из окна', max_length=255)
-    apartment_type = models.CharField(verbose_name='Тип', max_length=255)
+    apartment_type = models.CharField(verbose_name='Тип', max_length=255, choices=(
+        ('Студия', 'Студия'), ('1-комнатная', '1-комнатная'), ('2Е – евродвушка', '2Е – евродвушка'),
+        ('2-комнатная', '2-комнатная'), ('3Е – евротрешка', '3Е – евротрешка'),
+        ('3-комнатная', '3-комнатная'), ('4Е - еврочетырешка', '4Е - еврочетырешка'),
+        ('4-комнатная', '4-комнатная'), ('5Е – пятикомнатная евро', '5Е – пятикомнатная евро'), ('Многокомнатная', 'Многокомнатная'), ('Свободная планировка', 'Свободная планировка')
+    ), default='Студия')
     area = models.FloatField(verbose_name='Площадь')
     price = models.DecimalField(verbose_name='Цена', max_digits=12, decimal_places=2)
     status = models.CharField(verbose_name='Статус', max_length=15, choices=STATUS_CHOICES, default='available')
@@ -85,7 +91,7 @@ class Apartment(CreatedUpdatedMixin):
         ('Студия', 'Студия'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'),
         ('8', '8'), ('9', '9'), ('10 и более', '10 и более'), ('Своб.планировка', 'Своб.планировка')
     ))
-    published = models.BooleanField(verbose_name='Публиковать в фид', default=False)
+    published = models.BooleanField(verbose_name='Публиковать в фид', default=True)
     def __str__(self):
         if self.rooms in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
             return f'{self.rooms}-комнатная квартира'

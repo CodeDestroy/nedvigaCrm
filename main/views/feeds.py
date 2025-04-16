@@ -10,7 +10,7 @@ class BaseFeedView(ListView):
     context_object_name = 'apartments'
 
     def get_queryset(self):
-        return super().get_queryset().filter(published=True)
+        return super().get_queryset().filter(status="available")
 
     def render_to_response(self, context, **response_kwargs):
         response_kwargs['content_type'] = 'application/xml'

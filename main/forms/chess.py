@@ -14,7 +14,12 @@ class ApartmentForm(BaseModelForm):
             'rooms': forms.Select(attrs={'class': 'form-control'}, choices=(
                 ('Студия', 'Студия'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'),
                 ('8', '8'), ('9', '9'), ('10 и более', '10 и более'), ('Своб.планировка', 'Своб.планировка'))),
-            'apartment_type': forms.TextInput(attrs={'class': 'form-control'}),
+            'apartment_type': forms.Select(attrs={'class': 'form-control'}, choices=(
+                ('Студия', 'Студия'), ('1-комнатная', '1-комнатная'), ('2Е – евродвушка', '2Е – евродвушка'),
+                ('2-комнатная', '2-комнатная'), ('3Е – евротрешка', '3Е – евротрешка'),
+                ('3-комнатная', '3-комнатная'), ('4Е - еврочетырешка', '4Е - еврочетырешка'),
+                ('4-комнатная', '4-комнатная'), ('5Е – пятикомнатная евро', '5Е – пятикомнатная евро'), 
+                ('Многокомнатная', 'Многокомнатная'), ('Свободная планировка', 'Свободная планировка'))),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 0.01}),  
             'status': forms.Select(attrs={'class': 'form-control'}, choices=Apartment.STATUS_CHOICES),
             'terrace': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -26,7 +31,7 @@ class ApartmentForm(BaseModelForm):
 class ApartmentDetailForm(BaseModelForm):
     class Meta:
         model = Apartment
-        fields = ('number', 'window_orientation', 'area', 'rooms', 'apartment_type', 'price', 'status', 'terrace', 'kitchen_space', 'decoration', 'description', 'published')  # Поля для редактирования
+        fields = ('number', 'window_orientation', 'area', 'rooms', 'apartment_type', 'price', 'status', 'terrace', 'kitchen_space', 'decoration', 'description')  # Поля для редактирования
         
         widgets = {
             'number': forms.TextInput(attrs={'class': 'form-control'}),
@@ -35,7 +40,12 @@ class ApartmentDetailForm(BaseModelForm):
             'rooms': forms.Select(attrs={'class': 'form-control'}, choices=(
                 ('Студия', 'Студия'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'),
                 ('8', '8'), ('9', '9'), ('10 и более', '10 и более'), ('Своб.планировка', 'Своб.планировка'))),
-            'apartment_type': forms.TextInput(attrs={'class': 'form-control'}),
+            'apartment_type': forms.Select(attrs={'class': 'form-control'}, choices=(
+                ('Студия', 'Студия'), ('1-комнатная', '1-комнатная'), ('2Е – евродвушка', '2Е – евродвушка'),
+                ('2-комнатная', '2-комнатная'), ('3Е – евротрешка', '3Е – евротрешка'),
+                ('3-комнатная', '3-комнатная'), ('4Е - еврочетырешка', '4Е - еврочетырешка'),
+                ('4-комнатная', '4-комнатная'), ('5Е – пятикомнатная евро', '5Е – пятикомнатная евро'), 
+                ('Многокомнатная', 'Многокомнатная'), ('Свободная планировка', 'Свободная планировка'))),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 0.01}),  
             'status': forms.Select(attrs={'class': 'form-control'}, choices=Apartment.STATUS_CHOICES),
             'terrace': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -43,7 +53,6 @@ class ApartmentDetailForm(BaseModelForm):
             'decoration': forms.Select(attrs={'class': 'form-control'}, choices=(
                 ('Без отделки', 'Без отделки'), ('Предчистовая', 'Предчистовая'), ('Чистовая', 'Чистовая'))),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'published': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 class ApartmentCreateForm(BaseModelForm):
     class Meta:
@@ -57,7 +66,12 @@ class ApartmentCreateForm(BaseModelForm):
             'rooms': forms.Select(attrs={'class': 'form-control'}, choices=(
                 ('Студия', 'Студия'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'),
                 ('8', '8'), ('9', '9'), ('10 и более', '10 и более'), ('Своб.планировка', 'Своб.планировка'))),
-            'apartment_type': forms.TextInput(attrs={'class': 'form-control'}),
+            'apartment_type': forms.Select(attrs={'class': 'form-control'}, choices=(
+                ('Студия', 'Студия'), ('1-комнатная', '1-комнатная'), ('2Е – евродвушка', '2Е – евродвушка'),
+                ('2-комнатная', '2-комнатная'), ('3Е – евротрешка', '3Е – евротрешка'),
+                ('3-комнатная', '3-комнатная'), ('4Е - еврочетырешка', '4Е - еврочетырешка'),
+                ('4-комнатная', '4-комнатная'), ('5Е – пятикомнатная евро', '5Е – пятикомнатная евро'), 
+                ('Многокомнатная', 'Многокомнатная'), ('Свободная планировка', 'Свободная планировка'))),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 0.01}),  
             'status': forms.Select(attrs={'class': 'form-control'}, choices=Apartment.STATUS_CHOICES),
             'floor': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 1}),

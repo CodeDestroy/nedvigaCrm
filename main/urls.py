@@ -289,10 +289,10 @@ urlpatterns = [
         path('<str:status>/', views.LegalStatusListAjax(), name='legal-status-ajax')
     ])),
     # Фиды
-    path('feeds/', include([
-        path('avito/', views.AvitoFeed.as_view(), name='feed-avito'),
-        path('domclick/', views.DomClickFeed.as_view(), name='feed-domclick')
-    ])),
+    #path('feeds/', include([
+    #    path('avito/', views.AvitoFeed.as_view(), name='feed-avito'),
+    #    path('domclick/', views.DomClickFeed.as_view(), name='feed-domclick')
+    #])),
     # Ссылки авторизации
     path('fired/', views.FiredView.as_view(), name='fired'),
     path('account/', include([
@@ -355,6 +355,7 @@ urlpatterns = [
             path('create/', views.BuildingCreateView.as_view(), name='building_create'),
             path('<int:building_id>/', include([
                 path('update/', views.BuildingUpdateView.as_view(), name='building_update'),
+                path('export-excel/', views.ChessboardExportView.as_view(), name='building_export_excel'),
                 path('', views.ApartmentListView.as_view(), name='apartment_list'),
                 path('apartment/', include([
                     
