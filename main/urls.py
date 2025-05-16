@@ -332,6 +332,9 @@ urlpatterns = [
     path('feeds/', include([
         path('avito/', views.AvitoFeed.as_view(), name='avito-feed'),
         path('avito-new/', views.NewAvitoFeed.as_view(), name='avito-feed'),
+        path('domclick/', views.DomClickFeed.as_view(), name='domclick-feed'),
+        path('cian/', views.CianFeedNew.as_view(), name='cian-feed')
+        
     ])),
     path('chess/', include([
         path('', views.ResidentialComplexListView.as_view(), name='residential_complex_list'),
