@@ -7,3 +7,5 @@ media/
 ./.venv/
 main/__pycache__/
 newCrm/settings.py
+__pycache__/
+*.pyc
