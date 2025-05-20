@@ -107,7 +107,9 @@ class Apartment(CreatedUpdatedMixin):
 
 
     def get_alternative_description(self):
-        if self.building.alternative_description:
+        if len(self.description) > 0:
+            return self.description
+        elif self.building.alternative_description:
             return self.building.alternative_description
         elif self.building.complex and self.building.complex.alternative_description:
             return self.building.complex.alternative_description
