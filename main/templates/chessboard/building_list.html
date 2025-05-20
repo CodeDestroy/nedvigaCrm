@@ -5,10 +5,15 @@
     <button type="button" id="create-modal-btn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#building-modal-create">
         <i class="ti ti-plus icon"></i> Добавить дом
     </button>
+    <div>
+        <a type="button" class="btn btn-primary" href="{% url 'main:avito-feed-by-complex' complex_id=complex.id %}">
+            <i class="ti ti-download icon"></i> Выгрузить ФИД
+        </a>
+        <a type="button" class="btn btn-success" href="{% url 'main:complex_settings' complex_id=complex.id %}">
+            <i class="ti ti-settings icon"></i> Настройки ЖК
+        </a>
+    </div>
     
-    <a type="button" class="btn btn-success" href="{% url 'main:complex_settings' complex_id=complex.id %}">
-        <i class="ti ti-settings icon"></i> Настройки ЖК
-    </a>
 </div>
 
 <form class="card" method="post" action="#">{% csrf_token %}

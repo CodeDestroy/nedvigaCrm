@@ -332,6 +332,7 @@ urlpatterns = [
     path('feeds/', include([
         path('avito/', views.AvitoFeed.as_view(), name='avito-feed'),
         path('avito-new/', views.NewAvitoFeed.as_view(), name='avito-feed'),
+        path('avito-new/<int:complex_id>', views.NewAvitoFeedByComplex.as_view(), name='avito-feed-by-complex'),
         path('domclick/', views.DomClickFeed.as_view(), name='domclick-feed'),
         path('cian/', views.CianFeedNew.as_view(), name='cian-feed')
         
