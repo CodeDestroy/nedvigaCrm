@@ -11,9 +11,9 @@
 <Price>{{ apartment.price|stringformat:'.2f' }}</Price>
 <Images>{% for img in apartment.apartmentphoto_set.all %}<Image url="https://crm.xn--36-6kch5aj8bbq6g.xn--p1ai/{{ img.photo.url|cut:"//" }}"></Image>{% endfor %}</Images>
 <Rooms>{{ apartment.rooms }}</Rooms>
-<Square>{{ apartment.area|floatformat:"1"|cut:"," }}</Square>
+<Square>{{ apartment.area|floatformat:'.2f' }}</Square>
 <!-- living_space -->
-{% if apartment.area %}<LivingSpace>{{ apartment.area|floatformat:'.2f' }}</LivingSpace>{% endif %}
+{% if apartment.area|floatformat:'.2f' %}<LivingSpace>{{ apartment.area|floatformat:'.2f' }}</LivingSpace>{% endif %}
 {% if apartment.kitchen_space %}<KitchenSpace>{{ apartment.kitchen_space|floatformat:'.2f' }}</KitchenSpace>{% endif %}
 <Floor>{{ apartment.floor }}</Floor>
 <Floors>{{ apartment.building.total_floors }}</Floors>

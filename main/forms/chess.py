@@ -31,7 +31,7 @@ class ApartmentForm(BaseModelForm):
 class ApartmentDetailForm(BaseModelForm):
     class Meta:
         model = Apartment
-        fields = ('number', 'window_orientation', 'area', 'rooms', 'apartment_type', 'price', 'status', 'terrace', 'kitchen_space', 'decoration', 'description')  # Поля для редактирования
+        fields = ('number', 'window_orientation', 'area', 'rooms', 'apartment_type', 'price', 'status', 'terrace', 'kitchen_space', 'decoration', 'description', 'published')  # Поля для редактирования
         
         widgets = {
             'number': forms.TextInput(attrs={'class': 'form-control'}),
@@ -53,6 +53,7 @@ class ApartmentDetailForm(BaseModelForm):
             'decoration': forms.Select(attrs={'class': 'form-control'}, choices=(
                 ('Без отделки', 'Без отделки'), ('Предчистовая', 'Предчистовая'), ('Чистовая', 'Чистовая'))),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'published': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 class ApartmentCreateForm(BaseModelForm):
     class Meta:
