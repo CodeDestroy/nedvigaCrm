@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<realty-feed xmlns="http://webmaster.yandex.ru/schemas/feed/realty/2010-06">
+<generation-date>2010-10-05T16:36:00+04:00</generation-date>{% for flat in flats %}{% if flat.images and flat.build.floors %}
+<offer internal-id="{{ flat.pk|stringformat:'i' }}">
+    <type>продажа</type>
+    <property-type>жилая</property-type>
+    <category>квартира</category>
+    <creation-date>{{ flat.created_at|date:'Y-m-d\TH:m:s+00:00' }}</creation-date>
+    <last-update-date>{{ flat.updated_at|date:'Y-m-d\TH:m:s+00:00' }}</last-update-date>
+    <location>
+        <country>Россия</country>
+        <region>Воронежская область</region>
+        <district>{{ flat.build.complex.district }} район</district>
+        <locality-name>Воронеж</locality-name>
+        {% if flat.build.complex.district %}<non-admin-sub-locality>{{ flat.build.complex.district }}</non-admin-sub-locality>{% endif %}
+        <address>{{ flat.build.complex.address }}</address>
+        <latitude>{{ flat.build.lat|stringformat:".8f" }}</latitude>
+        <longitude>{{ flat.build.lon|stringformat:".8f" }}</longitude>
+    </location>
+    <sales-agent>
+        <phone>+74732023233</phone>
+        <organization>Агентство Недвижимости "Новостройки Воронеж"</organization>
+        <email>kvartiri.36@yandex.ru</email>
+        <category>agency</category>
+    </sales-agent>
+    <deal-status>переуступка</deal-status>
+    <price><value>{{ flat.price|stringformat:'i' }}</value><currency>RUB</currency></price>
+    {% for img in flat.images %}
+        {% if 'floorplan' in url %}<image tag="floor-plan">https://xn--36-6kch5aj8bbq6g.xn--p1ai{{ img }}</image>
+        {% elif 'plan1' in url or 'plan' in url %}<image tag="plan">https://xn--36-6kch5aj8bbq6g.xn--p1ai{{ img }}</image>
+        {% else %}<image>https://xn--36-6kch5aj8bbq6g.xn--p1ai{{ img }}</image>{% endif %}
+    {% endfor %}
+    <area><value>{{ flat.total_square }}</value><unit>кв. м</unit></area>
+    <living-space><value>{{ flat.living_square }}</value><unit>кв. м</unit></living-space>
+    <kitchen-space><value>{{ flat.kitchen_square }}</value><unit>кв. м</unit></kitchen-space>
+    <bathroom-unit>{{ flat.bathroom_unit }}</bathroom-unit>
+    <balcony>{{ flat.balcony }}</balcony>
+    <new-flat>1</new-flat>
+    <floor>{{ flat.floor }}</floor>
+    {% if flat.rooms %}<rooms>{{ flat.rooms }}</rooms>{% endif %}
+    <floors-total>{{ flat.build.floors }}</floors-total>
+    <building-name>{{ flat.build.complex.name }}</building-name>
+    <yandex-building-id>{{ flat.build.complex.domclick_id|stringformat:'i' }}</yandex-building-id>
+    <yandex-house-id>{{ flat.build.domclick_id|stringformat:'i' }}</yandex-house-id>
+    <building-state>{{ flat.build.state }}</building-state>
+    <built-year>{{ flat.build.ready_year|stringformat:'i' }}</built-year>
+    <ready-quarter>{{ flat.build.ready_quarter }}</ready-quarter>
+    <building-phase>{{ flat.build.phase }}</building-phase>
+    {% if flat.build.type == 'панельный' or flat.build.type == 'блочный' or flat.build.type == 'каркасно-блочный' or flat.build.type == 'панельно-блочный' %}<building-type>панельный</building-type>
+    {% elif flat.build.type == 'кирпично-монолитный' or flat.build.type == 'кирпичный' %}<building-type>кирпичный</building-type>
+    {% else %}<building-type>монолит</building-type>{% endif %}
+    <ceiling-height>{{ flat.build.height }}</ceiling-height>
+    <lift>{{ flat.build.lift }}</lift>
+    <parking>{{ flat.build.parking }}</parking>
+    {% if flat.decoration == 'Отделка "под ключ"' %}<renovation>под ключ</renovation>
+    {% elif flat.decoration == 'Чистовая отделка' %}<renovation>чистовая отделка</renovation>
+    {% else %}<renovation>черновая отделка</renovation>{% endif %}
+    <description><![CDATA[{{ flat.build.complex.description|safe }}]]></description>
+</offer>{% endif %}{% endfor %}</realty-feed>

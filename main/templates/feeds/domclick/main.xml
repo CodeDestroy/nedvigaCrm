@@ -1,0 +1,34 @@
+<feed>
+    <feed_version>2</feed_version>
+    {% for apartment in apartments %}{% if apartment.apartmentphoto_set.all and apartment.building.total_floors %}<object>
+        <category>newBuildingFlatSale</category>
+        <ExternalId>{{ apartment.pk|stringformat:'i' }}</ExternalId>
+        <Description><![CDATA[{% if apartment.description %}{{ apartment.description|safe }}{% else %}{{ apartment.building.complex.description|safe }}{% endif %}<p> </p><p>Почему стоит купить квартиру с агентством <strong>"{{ company_name }}"</strong>?</p><ul><li>Неограниченный ассортимент квартир в одном месте (работаем со всеми застройщиками);</li><li>Все акционные предложения в одном месте (будьте уверены, что купили самое выгодное из самого лучшего);</li><li>Самая выгодная ипотека без переплат за доп.услуги;</li><li>Ремонт и переезд - наша задача. Выбираете квартиру и переезжаете;</li><li>Проведем за руку от выбора квартиры до получения ключей;</li><li>С нами вы заработаете больше, потому что мы выберем самый ликвидный объект;</li><li>Цена от Застройщика (можно проверить);</li><li>Выберем лучшее место и окружение для Вашей семьи.</li></ul>]]></Description>
+        <Address>{{ apartment.building.address }}</Address>
+        {% if apartment.building.lat or apartment.building.lon %}<Coordinates><Lat>{{ apartment.building.lat }}</Lat><Lng>{{ apartment.building.lon }}</Lng></Coordinates>{% endif %}
+        <FlatRoomsCount>{% if apartment.type == '5+' %}6{% elif apartment.type == 'Студия' %}9{% else %}{{ apartment.type }}{% endif %}</FlatRoomsCount>
+        <Phones><PhoneSchema><CountryCode>+7</CountryCode><Number>4732023233</Number></PhoneSchema></Phones>
+        <TotalArea>{{ apartment.area }}</TotalArea>
+        <FloorNumber>{{ apartment.floor }}</FloorNumber>
+        {% if apartment.kitchen_space > 4 %}<KitchenArea>{{ apartment.kitchen_space }}</KitchenArea>{% endif %}
+        {% if apartment.living_square > 4 %}<LivingArea>{{ apartment.living_square }}</LivingArea>{% endif %}
+        <Building>
+            <FloorsCount>{{ apartment.building.total_floors }}</FloorsCount>
+            {% if apartment.building.height %}<CeilingHeight>{{ apartment.building.height }}</CeilingHeight>{% endif %}
+            <Deadline>
+                {% if apartment.building.ready_year > 0 %}<Year>{{ apartment.building.ready_year|stringformat:'i' }}</Year>{% endif %}
+                {% if apartment.building.ready_quarter > 0 %}<Quarter>{% if apartment.building.ready_quarter == 1 %}first{% elif apartment.building.ready_quarter == 2 %}second{% elif apartment.building.ready_quarter == 3 %}third{% else %}fourth{% endif %}</Quarter>{% endif %}
+                <IsComplete>{% now "Y" as year %}{% if apartment.building.ready_year < year %}True{% else %}False{% endif %}</IsComplete>
+            </Deadline>
+        </Building>
+        <BargainTerms>
+            <Price>{{ apartment.price|stringformat:'i' }}</Price>
+            <SaleType>{{ apartment.building.sale_type }}</SaleType>
+            <MortgageAllowed>{{ apartment.building.mortgage }}</MortgageAllowed>
+        </BargainTerms>
+        <JKSchema>
+            <Id>{{ apartment.building.complex.domclick_id|stringformat:'i' }}</Id>
+            <House><Id>{{ apartment.building.domclick_id|stringformat:'i' }}</Id></House>
+        </JKSchema>
+    </object>{% endif %}{% endfor %}
+</feed>

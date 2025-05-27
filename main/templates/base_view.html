@@ -64,7 +64,7 @@
             </div>
         </div>
     </header>
-    <header class="navbar-expand-md" style="overflow: auto;">
+    <header class="navbar-expand-md">
         <div class="collapse navbar-collapse" id="navbar-menu" >
             <div class="navbar">
                 <div class="container-xl" >
@@ -260,13 +260,14 @@
                                     {% endif %}
                                 </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'main:residential_complex_list' %}">
-                                    <!-- <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-brand-whatsapp"></i></span> -->
-                                    <span class="nav-link-title">Шахматка</span>
-                                </a>
-                            </li>
+                            
                         {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'main:residential_complex_list' %}">
+                                <!-- <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-brand-whatsapp"></i></span> -->
+                                <span class="nav-link-title">Шахматка</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

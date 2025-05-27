@@ -20,7 +20,21 @@ class AvitoFeed(BaseFeedView):
     template_name = 'feeds/avito.xml'
 
 class DomClickFeed(BaseFeedView):
-    template_name = 'feeds/avito.xml'
+    template_name = 'feeds/domclick/main.xml'
     extra_context = {'type': 'domclick'}
 class NewAvitoFeed(BaseFeedView):
     template_name = 'feeds/avito-new.xml'
+class NewAvitoFeedByComplex(BaseFeedView):
+    
+    template_name = 'feeds/avito-new.xml'
+    def get_queryset(self):
+        complex_id = self.kwargs.get("complex_id")  # получаем complex_id из URL
+        return super().get_queryset().filter(
+            status="available",
+            building__complex_id=complex_id
+        )
+class CianFeedNew(BaseFeedView):
+    template_name = 'feeds/cian.xml'
+
+    """ def get_queryset(self):
+        return super().get_queryset().filter(Q(obj__cian_id__isnull=False) | Q(obj__parent__cian_id__isnull=False)) """

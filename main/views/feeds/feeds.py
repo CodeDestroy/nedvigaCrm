@@ -23,7 +23,7 @@ class NewAvitoFeed(BaseFeedView):
     template_name = 'feeds/avito-new.xml'
 
 
-""" class CianFeed(BaseFeedView):
+class CianFeedNew(BaseFeedView):
     template_name = 'feeds/cian.xml'
 
     def get_queryset(self):
@@ -31,14 +31,14 @@ class NewAvitoFeed(BaseFeedView):
 
 
 class DomClickFeed(BaseFeedView):
-    template_name = 'feeds/avito.xml'
+    template_name = 'feeds/domclick/main.xml'
     extra_context = {'type': 'domclick'}
 
-    def get_queryset(self):
+    """ def get_queryset(self):
         return super(DomClickFeed, self).get_queryset().filter(
             Q(obj__parent__isnull=False, obj__parent__domclick_hide=False) |
             Q(obj__parent__isnull=True, obj__domclick_hide=False), domclick_hide=False) """
 
 
-""" class YandexFeed(BaseFeedView):
+"""class YandexFeed(BaseFeedView):
     template_name = 'feeds/yandex.xml' """

@@ -9,21 +9,24 @@
 <PropertyRights>Застройщик</PropertyRights>
 <ContactMethod>По телефону и в сообщениях</ContactMethod>
 <Price>{{ apartment.price|stringformat:'.2f' }}</Price>
-<Images>{% for img in apartment.apartmentphoto_set.all %}<Image url="https://crm.xn--36-6kch5aj8bbq6g.xn--p1ai/{{ img.photo.url }}"></Image>{% endfor %}</Images>
+<Images>{% for img in apartment.apartmentphoto_set.all %}<Image url="https://crm.xn--36-6kch5aj8bbq6g.xn--p1ai/{{ img.photo.url|cut:"//" }}"></Image>{% endfor %}</Images>
 <Rooms>{{ apartment.rooms }}</Rooms>
-<Square>{{ apartment.area }}</Square>
+<Square>{{ apartment.area|floatformat:'.2f' }}</Square>
 <!-- living_space -->
-{% if apartment.area %}<LivingSpace>{{ apartment.area }}</LivingSpace>{% endif %}
-{% if apartment.kitchen_space %}<KitchenSpace>{{ apartment.kitchen_space }}</KitchenSpace>{% endif %}
+{% if apartment.living_square|floatformat:'.2f' %}<LivingSpace>{{ apartment.living_square|floatformat:'.2f' }}</LivingSpace>{% endif %}
+{% if apartment.kitchen_space %}<KitchenSpace>{{ apartment.kitchen_space|floatformat:'.2f' }}</KitchenSpace>{% endif %}
 <Floor>{{ apartment.floor }}</Floor>
 <Floors>{{ apartment.building.total_floors }}</Floors>
-<!-- {% if type == 'domclick' %}
-<Address>{% if apartment.obj.region %}{{ apartment.obj.region }}{% elif apartment.obj.parent and apartment.obj.parent.region %}{{ apartment.obj.parent.region }}{% endif %}, {% if apartment.obj.city %}{{ apartment.obj.city }}{% elif apartment.obj.parent and apartment.obj.parent.city %}{{ apartment.obj.parent.city }}{% endif %}, {% if apartment.obj.address %}{{ apartment.obj.address }}{% elif apartment.obj.parent %}{{ apartment.obj.parent.address }}{% endif %}</Address>
-<apartmentNumber>{{ apartment.apartment_number }}</apartmentNumber>
-{% else %} --><ApartmentNumber>{{ apartment.number }}</ApartmentNumber>{% endif %}
+{% if type == 'domclick' %}
+<apartmentNumber>{{ apartment.number }}</apartmentNumber>
+{% else %}
+
+<ApartmentNumber>{{ apartment.number }}</ApartmentNumber>
+{% endif %}
+<Address>{% if apartment.building.region %}{{ apartment.building.region }}{% elif apartment.building.parent and apartment.building.parent.region %}{{ apartment.building.parent.region }}{% endif %}, {% if apartment.building.city %}{{ apartment.building.city }}{% elif apartment.building.parent and apartment.building.parent.city %}{{ apartment.building.parent.city }}{% endif %}, {% if apartment.building.address %}{{ apartment.building.address }}{% elif apartment.building.parent %}{{ apartment.building.parent.address }}{% endif %}</Address>
+
 <Description><![CDATA[{{ apartment.get_alternative_description|safe }}]]></Description>
-{% if apartment.kitchen_square %}<KitchenSpace>{{ apartment.kitchen_square }}</KitchenSpace>{% endif %}
 <Decoration>{{ apartment.decoration }}</Decoration>
 <HouseType>{{ apartment.building.material }}</HouseType>
-<NewDevelopmentId>{{ apartment.building.avito_id|stringformat:'i' }}</NewDevelopmentId>
+<NewDevelopmentId>{{ apartment.building.avito_id }}</NewDevelopmentId>
 </Ad>{% endif %}{% endfor %}</Ads>

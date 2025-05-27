@@ -26,6 +26,13 @@
                 </div>
                 <div class="mb-3">
                     <div class="input-group">
+                        <label class="input-group-text w-25" for="{{ form.living_square.id_for_label }}">{{ form.living_square.label }}</label>
+                        {{ form.living_square }}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="input-group">
                         <label class="input-group-text w-25" for="{{ form.rooms.id_for_label }}">{{ form.rooms.label }}</label>
                         {{ form.rooms }}
                     </div>
@@ -70,6 +77,12 @@
                     <div class="input-group">
                         <label class="input-group-text w-25" for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
                         {{ form.description }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        {{ form.published }}
+                        <label class="form-check-label" for="{{ form.published.auto_id }}">{{ form.published.label }}</label>
                     </div>
                 </div>
             </div>

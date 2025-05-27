@@ -1,0 +1,31 @@
+<feed>
+<feed_version>2</feed_version>{% for flat in flats %}{% if flat.images and flat.build.floors %}
+<object>
+    <category>newBuildingFlatSale</category>
+    <ExternalId>{{ flat.pk|stringformat:'i' }}</ExternalId>
+    <Description>{% if flat.description %}{{ flat.description|safe }}{% else %}{{ flat.build.complex.description|safe }}{% endif %}<p> </p><p>Почему стоит купить квартиру с агентством <strong>"{{ company_name }}"</strong>?</p><ul><li>Неограниченный ассортимент квартир в одном месте (работаем со всеми застройщиками);</li><li>Все акционные предложения в одном месте (будьте уверены, что купили самое выгодное из самого лучшего);</li><li>Самая выгодная ипотека без переплат за доп.услуги;</li><li>Ремонт и переезд - наша задача. Выбираете квартиру и переезжаете;</li><li>Проведем за руку от выбора квартиры до получения ключей;</li><li>С нами вы заработаете больше, потому что мы выберем самый ликвидный объект;</li><li>Цена от Застройщика (можно проверить);</li><li>Выберем лучшее место и окружение для Вашей семьи.</li></ul></Description>
+    <Address>{{ flat.build.address }}</Address>
+    {% if flat.build.lat or flat.build.lon %}<Coordinates><Lat>{{ flat.build.lat }}</Lat><Lng>{{ flat.build.lon }}</Lng></Coordinates>{% endif %}
+    <FlatRoomsCount>{% if flat.type == '5+' %}6{% elif flat.type == 'Студия' %}9{% else %}{{ flat.type }}{% endif %}</FlatRoomsCount>
+    <Phones><PhoneSchema><CountryCode>+7</CountryCode><Number>4732023233</Number></PhoneSchema></Phones>
+    <TotalArea>{{ flat.total_square }}</TotalArea>
+    <FloorNumber>{{ flat.floor }}</FloorNumber>
+    {% if flat.kitchen_square > 4 %}<KitchenArea>{{ flat.kitchen_square }}</KitchenArea>{% endif %}
+    {% if flat.living_square > 4 %}<LivingArea>{{ flat.living_square }}</LivingArea>{% endif %}
+    <Building>
+        <FloorsCount>{{ flat.build.floors }}</FloorsCount>
+        {% if flat.build.height %}<CeilingHeight>{{ flat.build.height }}</CeilingHeight>{% endif %}
+        <Deadline>
+            {% if flat.build.ready_year > 0 %}<Year>{{ flat.build.ready_year|stringformat:'i' }}</Year>{% endif %}
+            {% if flat.build.ready_quarter > 0 %}<Quarter>{% if flat.build.ready_quarter == 1 %}first{% elif flat.build.ready_quarter == 2 %}second{% elif flat.build.ready_quarter == 3 %}third{% else %}fourth{% endif %}</Quarter>{% endif %}
+            <IsComplete>{% now "Y" as year %}{% if flat.build.ready_year < year %}True{% else %}False{% endif %}</IsComplete>
+        </Deadline>
+    </Building>
+    <BargainTerms>
+        <Price>{{ flat.price|stringformat:'i' }}</Price>
+        <SaleType>{{ flat.build.sale_type }}</SaleType>
+        <MortgageAllowed>{{ flat.build.mortgage }}</MortgageAllowed>
+    </BargainTerms>
+    <JKSchema><Id>{{ flat.build.complex.cian_id }}</Id><House><Id>{{ flat.build.cian_id|stringformat:'i' }}</Id></House></JKSchema>
+</object>
+{% endif %}{% endfor %}</feed>
