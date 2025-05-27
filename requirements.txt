@@ -1,8 +1,0 @@
-daphne
-Django
-channels
-channels-redis
-psycopg
-requests
-celery
-xlwt

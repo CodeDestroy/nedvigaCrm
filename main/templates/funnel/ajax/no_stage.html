@@ -1,6 +1,0 @@
-{% for deal in deals %}{% include 'deal/card.html' with deal=deal %}{% endfor %}
-{% if is_paginated and page_obj.has_next %}
-<div id="noStage">
-    <button class="btn btn-ghost-primary w-100" hx-get="{% url 'main:ajax-no-stage-list' funnel_id=funnel_id %}?page={{ page_obj.next_page_number }}" hx-target="#noStage" hx-swap="outerHTML" hx-trigger="click"><i class="ti ti-plus icon"></i>Загрузить ещё</button>
-</div>
-{% endif %}

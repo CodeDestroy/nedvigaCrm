@@ -1,2 +1,0 @@
-<option value="{{ s.pk }}"{% if request.GET.stage|add:"0" == s.pk %} selected{% endif %}>{{ s }}</option>
-{% if s.child %}{% include 'deal/filter/funnel_stage_option.html' with s=s.child %}{% endif %}

@@ -1,7 +1,0 @@
-{% extends 'base_view.html' %}
-{% block container %}
-<form class="card" method="POST">
-    <div class="card-body">{% csrf_token %}{{ form.as_div }}</div>
-    <div class="card-footer text-end"><button type="submit" class="btn btn-success">Сохранить</button></div>
-</form>
-{% endblock %}
