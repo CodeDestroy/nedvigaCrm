@@ -1,0 +1,12 @@
+venv/
+./db.json
+db.json
+backups/
+logs/
+media/
+./.venv/
+main/__pycache__/
+main/views/__pycache__/
+newCrm/settings.py
+__pycache__/
+*.py[cod]
