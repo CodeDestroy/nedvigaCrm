@@ -143,28 +143,28 @@ class ApartmentListView(ListView, BaseView):
 class ApartmentCreateView(CreateView):
     model = Apartment
     form_class = ApartmentCreateForm
-
-    """ pk_url_kwarg = 'building_id' """
     template_name = 'chessboard/apartment_list.html'
-    #success_url = reverse_lazy('main:apartment_list')  # Измени на нужную страницу
     success_message = "Квартира успешно создана"
 
-   
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        building_id = self.kwargs.get("building_id")
+        context["building_id"] = building_id
+        context["building"] = get_object_or_404(Building, id=building_id)
+        return context
 
     def form_valid(self, form):
-        """Добавляем building_id и сохраняем квартиру"""
         form.instance.building = get_object_or_404(Building, id=self.kwargs.get("building_id"))
-        return super().form_valid(form)
+        self.object = form.save()
+        return JsonResponse({"message": "Квартира успешно создана"})
 
-    def get_context_data(self, **kwargs):
-        """Передаём building_id в контекст"""
-        context = super().get_context_data(**kwargs)
-        context["building_id"] = self.kwargs.get("building_id")
-        
+    def form_invalid(self, form):
+        return JsonResponse({
+            "error": "Ошибка валидации",
+            "errors": form.errors,
+        }, status=400)
 
-        return context
     def get_success_url(self):
-        """После успешного создания перенаправляем на apartment_list с нужным ID"""
         return reverse("main:apartment_list", kwargs={"building_id": self.kwargs.get("building_id")})
 
 class ApartmentUpdateView(SuccessMessageMixin, UpdateView):

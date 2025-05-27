@@ -13,7 +13,7 @@
 <Rooms>{{ apartment.rooms }}</Rooms>
 <Square>{{ apartment.area|floatformat:'.2f' }}</Square>
 <!-- living_space -->
-{% if apartment.area|floatformat:'.2f' %}<LivingSpace>{{ apartment.area|floatformat:'.2f' }}</LivingSpace>{% endif %}
+{% if apartment.living_square|floatformat:'.2f' %}<LivingSpace>{{ apartment.living_square|floatformat:'.2f' }}</LivingSpace>{% endif %}
 {% if apartment.kitchen_space %}<KitchenSpace>{{ apartment.kitchen_space|floatformat:'.2f' }}</KitchenSpace>{% endif %}
 <Floor>{{ apartment.floor }}</Floor>
 <Floors>{{ apartment.building.total_floors }}</Floors>

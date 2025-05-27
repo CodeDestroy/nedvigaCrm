@@ -75,6 +75,7 @@ class Apartment(CreatedUpdatedMixin):
         ('4-комнатная', '4-комнатная'), ('5Е – пятикомнатная евро', '5Е – пятикомнатная евро'), ('Многокомнатная', 'Многокомнатная'), ('Свободная планировка', 'Свободная планировка')
     ), default='Студия')
     area = models.FloatField(verbose_name='Площадь')
+    living_square = models.FloatField(verbose_name='Жилая площадь', default=0)
     price = models.DecimalField(verbose_name='Цена', max_digits=12, decimal_places=2)
     status = models.CharField(verbose_name='Статус', max_length=15, choices=STATUS_CHOICES, default='available')
     section = models.IntegerField(verbose_name='Секция (подъезд)', null=True, default=1)
