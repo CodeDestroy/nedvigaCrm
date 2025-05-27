@@ -1,0 +1,78 @@
+{% extends 'base_view.html' %}
+{% load tools %}
+{% block container %}
+<form class="card" method="post" action="{% url 'main:lead-responsible-change-massive' %}">{% csrf_token %}
+    <input type="hidden" name="next" value="{% url 'main:lead-unassembled' %}"/>
+    {% if request.user.is_staff %}
+    <div class="card-body">
+        <div class="input-group">
+            <span class="input-group-text d-none d-sm-block">Выберите нового ответственного</span>
+            <select name="responsible" class="form-select">
+                <option value="" selected>Все ответственные</option>
+                {% for user in users %}
+                    <option value="{{ user.pk }}">{{ user }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" type="submit">Назначить</button>
+        </div>
+    </div>
+    {% endif %}
+    <div class="table-responsive">
+        <table class="table table-vcenter table-bordered table-nowrap card-table">
+            <thead>
+            <tr>
+                {% if request.user.is_staff %}<th style="padding-left: 12px" class="w-1"><input type='checkbox' class="form-check-input" onclick='handleCheckAll(this);'></th>{% endif %}
+                <th class="w-1 text-center p-3">#</th>
+                <th class="text-center">ФИО</th>
+                <th class="text-center">Телефон</th>
+                <th class="text-center w-1">Теплота</th>
+                <th class="text-center w-1">Добавлен</th>
+                <th class="text-center w-1">Сделка</th>
+                <th class="text-center w-1">Ответственные</th>
+                {% if request.user.is_staff %}<th class="w-1"></th>{% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for lead in leads %}
+            <tr>
+                {% if request.user.is_staff %}
+                <td class="w-1 p-2 text-center">
+                    <input class="form-check-input" type="checkbox" name="lead" value="{{ lead.pk|stringformat:'i' }}">
+                </td>
+                {% endif %}
+                <td class="text-center p-3"><a href="{{ lead.get_absolute_url }}">{{ lead.pk }}</a></td>
+                <td class="text-center"><a href="{{ lead.get_absolute_url }}">{{ lead }}</a></td>
+                <td class="text-center"><a href="{{ lead.get_absolute_url }}">{{ lead.phone }}</a></td>
+                <td class="text-center">{{ lead.warm_to_html|safe }}</td>
+                <td><a href="{{ lead.get_absolute_url }}">{{ lead.created_at }}</a></td>
+                <td>
+                    {% for d in lead.deal_set.all %}
+                        <a href="{{ d.get_absolute_url }}" class="badge bg-info">{% if d.status %}{{ d.status }} : {% endif %}{{ d.name }}</a>
+                    {% endfor %}
+                </td>
+                <td class="text-center">{% if lead.responsible %}<span class="badge bg-blue-lt">{{ lead.responsible }}</span>{% endif %}</td>
+                {% if request.user.is_staff %}
+                <td class="text-center w-1">
+                    {% url 'main:lead-delete' lead_id=lead.pk as url_delete %}
+                    {% url 'main:modal-lead-delete' lead_id=lead.pk as url_modal_delete %}
+                    {% include 'base_link.html' with url=url_delete class='btn btn-icon btn-danger' get=url_modal_delete text='<i class="ti ti-trash icon m-0"></i>' %}
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'base_pagination.html' %}
+</form>
+<script type="text/javascript">
+    function handleCheckAll(cb) {
+
+        const leads = document.getElementsByName('lead')
+
+        for(var i=0, n=leads.length;i<n;i++) {
+            leads[i].checked = cb.checked;
+        }
+    }
+</script>
+{% endblock %}

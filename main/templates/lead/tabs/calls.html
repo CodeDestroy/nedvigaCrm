@@ -1,0 +1,4 @@
+<ul class="list-group list-group-flush">
+    {% for action in lead.calls %}{% include action.get_card_template with action=action %}
+    {% empty %}<li class="list-group-item">Звонков у контакта нет</li>{% endfor %}
+</ul>

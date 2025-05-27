@@ -1,0 +1,84 @@
+{% extends 'base_view.html' %}
+{% block container %}
+<button type="button" id="create-modal-btn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#complex-modal-create">
+    <i class="ti ti-plus icon"></i>Добавить ЖК
+</button>
+<form class="card" method="post" action="#">{% csrf_token %}
+    <div class="card-body">
+        <h1>Список жилых комплексов</h1>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-vcenter table-bordered table-nowrap card-table">
+            <thead>
+            <tr>
+                <th class="w-1 text-center p-3">ID</th>
+                <th class="text-center">Название</th>
+                <th class="text-center">Описание</th>
+                <th class="text-center">Кол-во домов</th>
+                <th class="text-center">Количество квартир</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for complex in complexes %}
+            <tr>
+                <td class="text-center p-3">
+                    <a href="{% url 'main:building_list' complex.id %}">{{ complex.id }}</a>
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'main:building_list' complex.id %}">{{ complex.name }}</a>
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'main:building_list' complex.id %}">{{ complex.description }}</a>
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'main:building_list' complex.id %}">{{ complex.buildings.count }}</a>
+                </td>
+                <td class="text-center">{{complex.total_apartments}}</td>
+                <td class="text-center">
+                    <a href="{% url 'main:residential_complex_update' complex.id %}">Редактировать</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">Нет доступных ЖК</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'base_pagination.html' %}
+</form>
+<div class="modal" id="complex-modal-create" tabindex="-1" aria-labelledby="ComplexModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="position: static;">
+        <div class="modal-content" style="width: 35rem; max-height: 80vh; overflow-y: auto;">
+            <form method="post" id="complex-form" action="/chess/complex/create/">
+                {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="complexModalLabel">Добавить ЖК</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="mb-3 col">
+                            <label class="form-label">Название</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col">
+                            <label class="form-label">Описание</label>
+                            <input type="text" name="description" class="form-control" required>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

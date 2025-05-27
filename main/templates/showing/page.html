@@ -1,0 +1,58 @@
+{% extends 'base_view.html' %}
+{% block container %}
+{% if showing.is_done %}
+<div class="row">
+    <div class="col">
+        <div class="alert alert-success" role="alert"><i class="ti ti-check"></i> Показ выполнен!</div>
+    </div>
+</div>
+{% endif %}
+<div class="row">
+    <div class="col-12 col-lg-6">
+        {% if task.lead %}
+            <div class="card mb-3">
+                <div class="card-header border-bottom-0">
+                    <div>
+                        <div class="card-title">{{ task.lead }}</div>
+                        <div class="card-subtitle">Контакт</div>
+                    </div>
+                    <div class="card-actions"><a href="{{ task.lead.get_absolute_url }}" class="btn btn-primary">Посмотреть</a></div>
+                </div>
+            </div>
+        {% endif %}
+        {% if task.deal %}
+            <div class="card mb-3">
+                <div class="card-header border-bottom-0">
+                    <div>
+                        <div class="card-title">{{ task.deal }}</div>
+                        <div class="card-subtitle">Сделка</div>
+                    </div>
+                    <div class="card-actions"><a href="{{ task.deal.get_absolute_url }}" class="btn btn-primary">Посмотреть</a></div>
+                </div>
+            </div>
+        {% endif %}
+        <form action="{% url 'main:showing-update' showing_id=showing.pk %}" method="post" class="card">
+            <div class="card-body">{% csrf_token %}{{ form.as_div }}</div>
+            <div class="card-footer"><button type="submit" class="btn btn-success">Сохранить</button></div>
+        </form>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-dashboard me-2"></i> Активность</h3></div>
+            <ul class="list-group list-group-flush">
+                {% if not showing.is_done %}
+                <li class="list-group-item">
+                    <form action="{% url 'main:comment-create' type='showing' item_id=showing.id %}" method="post">
+                        {% csrf_token %}
+                        {{ comment_form.as_div }}
+                        <button type="submit" class="btn btn-success">Отправить</button>
+                    </form>
+                </li>
+                {% endif %}
+                {% for action in showing.comments %}{% include 'comment/card.html' with action=action %}
+                {% empty %}<li class="list-group-item">Активностей у задачи нет</li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% load statistic %}
+<table id="sources" class="table table-vcenter card-table">
+    <thead>
+    <tr>
+        <th class="fw-bolder">Источник</th>
+        <th class="text-center fw-bolder">Контакты</th>
+        <th class="text-center fw-bolder bg-red text-red-fg" colspan="2">Горячий</th>
+        <th class="text-center fw-bolder bg-yellow text-yellow-fg" colspan="2">Теплый</th>
+        <th class="text-center fw-bolder bg-azure text-azure-fg" colspan="2">Холодный</th>
+        <th class="text-center fw-bolder bg-cyan text-cyan-fg" colspan="2">Не клиент</th>
+        <th class="text-center fw-bolder bg-muted text-muted-fg" colspan="2">Не дозвонились</th>
+        <th class="text-center fw-bolder bg-black text-white" colspan="2">Не актуально</th>
+        <th class="text-center fw-bolder bg-orange text-orange-fg" colspan="2">Без теплоты</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for source in sources %}
+    <tr>
+        {% source from to stage source as s %}
+        <td>{{ source }}</td>
+        <td class="text-center">{{ s.count }}</td>
+        <td class="text-center fw-bolder bg-red-lt">{{ s.count_hot_new }}</td>
+        <td class="text-center fw-bolder bg-red-lt">{{ s.count_hot_old }}</td>
+        <td class="text-center bg-yellow-lt">{{ s.count_warm_new }}</td>
+        <td class="text-center bg-yellow-lt">{{ s.count_warm_old }}</td>
+        <td class="text-center bg-azure-lt">{{ s.count_cold_new }}</td>
+        <td class="text-center bg-azure-lt">{{ s.count_cold_old }}</td>
+        <td class="text-center bg-cyan-lt">{{ s.count_not_client_new }}</td>
+        <td class="text-center bg-cyan-lt">{{ s.count_not_client_old }}</td>
+        <td class="text-center bg-muted-lt">{{ s.count_not_call_new }}</td>
+        <td class="text-center bg-muted-lt">{{ s.count_not_call_old }}</td>
+        <td class="text-center">{{ s.count_not_actual_new }}</td>
+        <td class="text-center">{{ s.count_not_actual_old }}</td>
+        <td class="text-center bg-orange-lt">{{ s.count_none_new }}</td>
+        <td class="text-center bg-orange-lt">{{ s.count_none_old }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        {% source from to stage None as s %}
+        <td class="fw-bolder">Всего</td>
+        <td class="text-center fw-bolder">{{ s.count }}</td>
+        <td class="text-center fw-bolder bg-red-lt">{{ s.count_hot_new }}</td>
+        <td class="text-center fw-bolder bg-red-lt">{{ s.count_hot_old }}</td>
+        <td class="text-center fw-bolder bg-yellow-lt">{{ s.count_warm_new }}</td>
+        <td class="text-center fw-bolder bg-yellow-lt">{{ s.count_warm_old }}</td>
+        <td class="text-center fw-bolder bg-azure-lt">{{ s.count_cold_new }}</td>
+        <td class="text-center fw-bolder bg-azure-lt">{{ s.count_cold_old }}</td>
+        <td class="text-center fw-bolder bg-cyan-lt">{{ s.count_not_client_new }}</td>
+        <td class="text-center fw-bolder bg-cyan-lt">{{ s.count_not_client_old }}</td>
+        <td class="text-center fw-bolder bg-muted-lt">{{ s.count_not_call_new }}</td>
+        <td class="text-center fw-bolder bg-muted-lt">{{ s.count_not_call_old }}</td>
+        <td class="text-center fw-bolder">{{ s.count_not_actual_new }}</td>
+        <td class="text-center fw-bolder">{{ s.count_not_actual_old }}</td>
+        <td class="text-center fw-bolder bg-orange-lt">{{ s.count_none_new }}</td>
+        <td class="text-center fw-bolder bg-orange-lt">{{ s.count_none_old }}</td>
+    </tr>
+    </tfoot>
+</table>

@@ -1,0 +1,42 @@
+<form class="card-body" action="{% url 'main:lead-source-create' lead_id=lead.id %}" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <div class="input-group">
+            <label class="input-group-text" for="{{ source_form.source.id_for_label }}">{{ source_form.source.label }}</label>
+            {{ source_form.source }}
+            {% if request.user.is_staff %}
+                {% url 'main:source-create' as url_form %}
+                {% url 'main:modal-lead-source-create' lead_id=lead.pk as url_modal %}
+                {% include 'base_link.html' with url=url_form class='btn btn-success btn-icon' get=url_modal text='<i class="ti ti-plus icon"></i>' %}
+            {% endif %}
+            <button type="submit" class="btn btn-teal">Отправить</button>
+        </div>
+        {% if source_form.source.help_text %}<div class="form-text">{{ source_form.source.help_text|safe }}</div>{% endif %}
+        {% if source_form.source.errors %}<div class="invalid-feedback">{{ source_form.source.errors }}</div>{% endif %}
+    </div>
+</form>
+<div class="table-responsive">
+    <table class="table table-vcenter card-table">
+        <thead>
+        <tr><th class="w-1">#</th><th>Источник</th><th>UTM</th><th>Дата создания</th><th class="w-1"></th></tr>
+        </thead>
+        <tbody>
+        {% for s in lead.leadsource_set.all %}
+            <tr>
+                <td>{{ s.pk }}</td>
+                <td>{{ s.source.name }}</td>
+                <td>{% if s.utm %}{{ s.utm }}{% endif %}</td>
+                <td>{{ s.created_at }}</td>
+                <td>
+                    {% if request.user.is_staff %}
+                        <form action="{% url 'main:lead-source-delete' lead_id=lead.pk ls_id=s.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-icon btn-sm"><i class="ti ti-trash-x icon" style="--tblr-btn-icon-size: 1.3rem"></i></button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}<tr><td colspan="5" class="text-center">Источники не указаны</td></tr>{% endfor %}
+        </tbody>
+    </table>
+</div>

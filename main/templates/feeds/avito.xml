@@ -1,0 +1,7 @@
+<Ads formatVersion="3" target="Avito.ru">{% for flat in flats %}{% if flat.objectphoto_set.all %}<Ad>
+<Id>{{ flat.pk|stringformat:'i' }}</Id>
+{% if flat.user %}{% if flat.user.first_name %}<ManagerName>{{ flat.user.first_name }}</ManagerName>{% endif %}<ContactPhone>{{ flat.user.phone }}</ContactPhone>{% endif %}
+{% for f in flat.objectfield_set.all%}<{{f.name}}>{% if f.name == 'Description' %}<![CDATA[{{ f.value|safe }}]]>{% else %}{{ f.value }}{% endif %}</{{f.name}}>{% endfor %}
+<Images>{% for img in flat.objectphoto_set.all %}<Image url="https://crm.xn--36-6kch5aj8bbq6g.xn--p1ai{{ img.photo.url }}"></Image>{% endfor %}</Images>
+{% if type != 'domclick' and flat.avito_id %}<AvitoId>{{ flat.avito_id|stringformat:'i' }}</AvitoId>{% endif %}
+</Ad>{% endif %}{% endfor %}</Ads>

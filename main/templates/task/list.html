@@ -1,0 +1,51 @@
+{% extends 'base_view.html' %}
+{% load task %}
+{% block page_title %}
+    {% tasks user as t %}
+    <ul class="nav nav-bordered">
+        <li class="nav-item">
+            <a class="nav-link{% if 'outdated' in request.path %} active{% endif %}" href="{% url 'main:task-list-outdated' date_str=current_date %}">Просроченные<span class="badge bg-red text-red-fg ms-2">{{ t.outdated_count }}</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if 'today' in request.path %} active{% endif %}" href="{% url 'main:task-list-today' date_str=current_date %}">На сегодня<span class="badge bg-green text-green-fg ms-2">{{ t.today_count }}</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if 'tomorrow' in request.path %} active{% endif %}" href="{% url 'main:task-list-tomorrow' date_str=current_date %}">На завтра<span class="badge bg-orange text-orange-fg ms-2">{{ t.tomorrow_count }}</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if 'other' in request.path %} active{% endif %}" href="{% url 'main:task-list-other' date_str=current_date %}">Остальные<span class="badge bg-cyan text-cyan-fg ms-2">{{ t.other_count }}</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if 'closed' in request.path %} active{% endif %}" href="{% url 'main:task-list-closed' date_str=current_date %}">Закрытые</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block container %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-vcenter table-bordered table-nowrap card-table">
+            <thead>
+            <tr>
+                <th class="text-center w-1">#</th>
+                <th class="text-center">Название</th>
+                <th class="text-center w-1"><i class="ti ti-address-book me-2"></i>Контакт</th>
+                <th class="text-center w-1"><i class="ti ti-wallet me-2"></i>Сделка</th>
+                <th class="text-center w-1"><i class="ti ti-calendar-bolt me-2"></i>Крайний срок</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+            <tr{% if task.priority > 1 %} class="{{ task.get_card_color }}"{% endif %}>
+                <td class="text-center{% if task.priority > 1 %} {{ task.get_card_color }}{% endif %}"><a href="{{ task.get_absolute_url }}">{{ task.pk }}</a></td>
+                <td class="text-center{% if task.priority > 1 %} {{ task.get_card_color }}{% endif %}"><a href="{{ task.get_absolute_url }}">{{ task.name }}</a></td>
+                <td class="text-center">{% if task.lead %}<a href="{{ task.lead.get_absolute_url }}" class="btn btn-light btn-sm">{{ task.lead }}</a>{% else %}&mdash;{% endif %}</td>
+                <td class="text-center">{% if task.deal %}<a href="{{ task.deal.get_absolute_url }}" class="btn btn-light btn-sm">{{ task.deal }}</a>{% else %}&mdash;{% endif %}</td>
+                <td class="text-center">{{ task.date_to|default:"Не указан" }}</td>
+            </tr>
+            {% empty %}<tr><td colspan="5" class="text-center">Задач нет</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'base_pagination.html' %}
+</div>
+{% endblock %}
