@@ -9,4 +9,4 @@ main/__pycache__/
 main/views/__pycache__/
 newCrm/settings.py
 __pycache__/
-*.pyc
+*.py[cod]
