@@ -31,12 +31,13 @@ class ApartmentForm(BaseModelForm):
 class ApartmentDetailForm(BaseModelForm):
     class Meta:
         model = Apartment
-        fields = ('number', 'window_orientation', 'area', 'rooms', 'apartment_type', 'price', 'status', 'terrace', 'kitchen_space', 'decoration', 'description', 'published')  # Поля для редактирования
+        fields = ('number', 'window_orientation', 'area', 'rooms', 'apartment_type', 'price', 'status', 'terrace', 'kitchen_space', 'decoration', 'description', 'published' , 'living_square')  # Поля для редактирования
         
         widgets = {
             'number': forms.TextInput(attrs={'class': 'form-control'}),
             'window_orientation': forms.TextInput(attrs={'class': 'form-control'}),
             'area': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 0.01}),  
+            'living_square': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 0.01}),
             'rooms': forms.Select(attrs={'class': 'form-control'}, choices=(
                 ('Студия', 'Студия'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'),
                 ('8', '8'), ('9', '9'), ('10 и более', '10 и более'), ('Своб.планировка', 'Своб.планировка'))),
@@ -58,12 +59,13 @@ class ApartmentDetailForm(BaseModelForm):
 class ApartmentCreateForm(BaseModelForm):
     class Meta:
         model = Apartment
-        fields = ('number', 'window_orientation', 'area', 'rooms', 'apartment_type', 'price', 'status', 'floor', 'str', 'col', 'section', 'terrace', 'kitchen_space', 'decoration')  # Поля для редактирования
+        fields = ('number', 'window_orientation', 'area', 'rooms', 'apartment_type', 'price', 'status', 'floor', 'str', 'col', 'section', 'terrace', 'kitchen_space', 'decoration', 'living_square')  # Поля для редактирования
 
         widgets = {
             'number': forms.TextInput(attrs={'class': 'form-control'}),
             'window_orientation': forms.TextInput(attrs={'class': 'form-control'}),
             'area': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 0.01}),  
+            'living_square': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': 0.01}),
             'rooms': forms.Select(attrs={'class': 'form-control'}, choices=(
                 ('Студия', 'Студия'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'),
                 ('8', '8'), ('9', '9'), ('10 и более', '10 и более'), ('Своб.планировка', 'Своб.планировка'))),
