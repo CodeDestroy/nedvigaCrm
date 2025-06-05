@@ -16,7 +16,7 @@ class Questions(CreatedUpdatedMixin):
                                null=True, blank=True)
     decoration = models.CharField(max_length=15, verbose_name='Отделка', choices=settings.DECORATION_CHOICES,
                                   null=True, blank=True)
-    developer = models.CharField(max_length=50, verbose_name='Застройщик', null=True, blank=True)
+    developer = models.CharField(max_length=50, verbose_name='Застройщик', null=True, blank=True, choices=settings.DEVELOPERS_CHOICES)
     payment = models.CharField(max_length=9, verbose_name='Способы оплаты', choices=settings.PAYTYPE_CHOICES,
                                null=True, blank=True)
     bank = models.CharField(max_length=150, verbose_name='Банк', null=True, blank=True)

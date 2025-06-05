@@ -70,12 +70,22 @@
                     </div>
                 </div>
                 <div class="row align-items-center mb-3">
-                    <div class="col-12 col-lg mb-3 mb-lg-0">
+                    <!-- <div class="col-12 col-lg mb-3 mb-lg-0">
                         <select name="decoration" class="form-select">
                             <option value="" selected>Отделка</option>
                             {% for d in decoration %}
                                 <option value="{{ d.0 }}"{% if request.GET.decoration == d.0 %} selected{% endif %}>{{ d.1 }}</option>
                             {% endfor %}
+                        </select>
+                    </div> -->
+                    <div class="col-12 col-lg mb-3 mb-lg-0">
+                        <select name="developer" class="form-select">
+                            <option value="" selected>Застройщик</option>
+                            <option value="Bobrov"{% if request.GET.developer == "Bobrov" %} selected{% endif %}>Бобров</option>
+                            <option value="Collection"{% if request.GET.developer == "Collection" %} selected{% endif %}>Коллекция</option>
+                            <!-- {% for d in developer %}
+                                <option value="{{ d.0 }}"{% if request.GET.developer == d.0 %} selected{% endif %}>{{ d.1 }}</option>
+                            {% endfor %} -->
                         </select>
                     </div>
                     <div class="col-12 col-lg mb-3 mb-lg-0">

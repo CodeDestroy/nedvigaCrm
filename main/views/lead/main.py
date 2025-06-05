@@ -65,6 +65,8 @@ class BaseLeadListView(ListView, BaseView):
             qs = qs.filter(deal__stage__pk=stage)
         if decoration := self.request.GET.get('decoration'):
             qs = qs.filter(questions__decoration=decoration)
+        if developer := self.request.GET.get('developer'):
+            qs = qs.filter(questions__developer=developer)
         if marital := self.request.GET.get('marital'):
             qs = qs.filter(questions__marital_status=marital)
         if purpose := self.request.GET.get('purpose'):
