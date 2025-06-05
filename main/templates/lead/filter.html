@@ -83,6 +83,8 @@
                             <option value="" selected>Застройщик</option>
                             <option value="Bobrov"{% if request.GET.developer == "Bobrov" %} selected{% endif %}>Бобров</option>
                             <option value="Collection"{% if request.GET.developer == "Collection" %} selected{% endif %}>Коллекция</option>
+                            <option value="soy-dom"{% if request.GET.developer == "soy-dom" %} selected{% endif %}>Свой дом</option>
+                            <option value="pritazenie"{% if request.GET.developer == "pritazenie" %} selected{% endif %}>Приятжение</option>
                             <!-- {% for d in developer %}
                                 <option value="{{ d.0 }}"{% if request.GET.developer == d.0 %} selected{% endif %}>{{ d.1 }}</option>
                             {% endfor %} -->
