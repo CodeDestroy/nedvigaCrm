@@ -114,7 +114,7 @@ class Apartment(CreatedUpdatedMixin):
             return self.building.alternative_description
         elif self.building.complex and self.building.complex.alternative_description:
             return self.building.complex.alternative_description
-        return self.description
+        return ''
 
     class Meta(object):
         app_label = 'main'
