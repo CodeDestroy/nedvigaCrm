@@ -10,6 +10,7 @@ class Complex(CreatedUpdatedMixin):
     address = models.CharField(max_length=255, null=True, blank=True, verbose_name='Адрес')
     region = models.CharField(max_length=255, null=True, blank=True, verbose_name='Регион')
     city = models.CharField(max_length=255, null=True, blank=True, verbose_name='Город')
+    avito_id = models.CharField(max_length=255, null=True, blank=True)
     alternative_description = models.TextField(null=True, blank=True, verbose_name='Альтернативное описание (перезаписывает всё описание)')
     """ image = models.ImageField(upload_to='complex_images/', null=True, blank=True) """
     def total_apartments(self):

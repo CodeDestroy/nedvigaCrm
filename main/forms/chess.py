@@ -112,7 +112,7 @@ class BuildingCreateForm(BaseModelForm):
 class BuildingUpdateForm(forms.ModelForm):
     class Meta:
         model = Building
-        fields = ('name', 'total_floors', 'total_apartments', 'address', 'region', 'city', 'material', 'description', 'alternative_description')
+        fields = ('name', 'total_floors', 'total_apartments', 'address', 'region', 'city', 'material', 'description', 'alternative_description', 'avito_id')
         
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -124,6 +124,7 @@ class BuildingUpdateForm(forms.ModelForm):
             'material': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'alternative_description': forms.Textarea(attrs={'class': 'form-control'}),
+            'avito_id': forms.TextInput(attrs={'class': 'form-control'}),
         }
 class ComplexCreateForm(BaseModelForm):
     class Meta:
@@ -138,7 +139,7 @@ class ComplexCreateForm(BaseModelForm):
 class ComplexUpdateForm(BaseModelForm):
     class Meta:
         model = Complex
-        fields = ('name', 'description', 'address', 'region', 'city', 'alternative_description')  # Поля для редактирования
+        fields = ('name', 'description', 'address', 'region', 'city', 'alternative_description', 'avito_id')  # Поля для редактирования
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -146,7 +147,8 @@ class ComplexUpdateForm(BaseModelForm):
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'region': forms.TextInput(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'alternative_description': forms.Textarea(attrs={'class': 'form-control'})
+            'alternative_description': forms.Textarea(attrs={'class': 'form-control'}),
+            'avito_id': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 class VisionTypeForm(BaseModelForm):

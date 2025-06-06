@@ -41,7 +41,11 @@
             {{ form.alternative_description }}
             {{ form.alternative_description.errors }}
         </div>
-
+        <div class="form-group">
+            {{ form.avito_id.label_tag }}
+            {{ form.avito_id }}
+            {{ form.avito_id.errors }}
+        </div>
         <button type="submit" class="btn btn-success">Сохранить</button>
         <a href="{% url 'main:building_list' complex_id=object.pk %}" class="btn btn-secondary">Отмена</a>
     </form>
